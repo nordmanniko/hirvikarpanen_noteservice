@@ -1,11 +1,13 @@
 ## Mitä?
 - Muistiinpano aplikaatio, joka tallentaa käyttäjään muistiinpanot
-### ominaisuuksia
+
+### Ominaisuuksia
 - gps:sää luvallisesti hyödyntäen voidaan filtteröidä esimerkiksi vain työpaikalla tehdyt muistiinpanot
 - mahdollisuus organisoida muistiinpanoja omilla kategorioilla
 - kuvaustoiminto
 - hakutoiminto
 - toimii selaimessa kuten puhelimessa eli pystytään käyttämään tietokoneellakin
+
 ### Huomioitavaa
 - kirjautuminen ei ole pakollinen mutta tarvittava muistiinpanojen tallennusta varten
 - gps ei ole pakollinen käyttää ja tuo ison tietoturva riskin joten se tehdään vain harjoittelu muodossa
@@ -25,7 +27,7 @@
 - tailwind (todenäköisesti ei saa toimimaan mobiilifrontilla)
 - !mobiili frontti
 
-### filtteritoiminnot
+### Filtteritoiminnot
 - itsemuokattavat väri kategorioinnit, jotka auttavat organisoinnissa.
 - gpssän avulla voi filtteröidä omat kirjoittamansa muistiinpanot esim työpaikan ja kodin muistiinpanot
 - to do filtteri vaihtoehto
@@ -39,6 +41,7 @@
 
 ### Aikaa vievät ideat
 - sso jotta apin voisi vaikka integroida koulun startti sivulle :D  >:|
+- vaativampi teksti editori kirjoittaessa (boldaus, alleviivaus, kursiivi ja listaaminen valikkoon)
 
 ### Aloitus
 - tehdään tosi "barebones" muistiinpano aplikaatio
@@ -47,3 +50,25 @@
 - tietokantayhteys
 - "continious refining and remastering of the application"
 - mahd mobiilifrontti
+
+### Backend
+- tehdään FastAPI:lla
+- backendiin tulee seuraavat
+
+| Notes | Users |
+| ----------- | ----------- |
+| title | username |
+| note | email |
+| tags | password |
+| color |
+| gps |
+| picture (?) |
+
+## Miten backend
+- mene /backend
+- käytä `.venv\Scripts\Activate.ps1` kun muokkaat
+- käytä `deactivate` kun lopetat
+- ??????
+## Miten frontend
+- mene /notes 
+- käytä `npx expo start`
