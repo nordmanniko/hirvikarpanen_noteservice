@@ -67,6 +67,7 @@
 ## Miten backend
 - mene /backend
 - käytä `.venv\Scripts\Activate.ps1` kun muokkaat
+- fastapi dev main.py
 - käytä `deactivate` kun lopetat
 - ??????
 ## Miten frontend

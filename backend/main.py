@@ -2,6 +2,7 @@ from typing import Annotated
 
 from fastapi import Depends, FastAPI
 from .routers import notes, users , tags, colors
+from pydantic import BaseModel
 
 from .dependencies import create_db_and_tables
 
@@ -15,3 +16,4 @@ app.include_router(colors.router)
 @app.on_event("startup")
 def on_startup():
     create_db_and_tables()
+
