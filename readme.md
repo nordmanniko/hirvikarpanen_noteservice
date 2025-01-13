@@ -73,3 +73,6 @@
 ## Miten frontend
 - mene /notes 
 - käytä `npx expo start`
+
+## testing api locally
+uvicorn main:app --reload

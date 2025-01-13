@@ -3,13 +3,19 @@ from typing import Annotated
 # from typing import Union
 from pydantic import BaseModel
 
-from fastapi import Depends, FastAPI
-from .routers import notes, users , tags, colors
+from fastapi import Depends, FastAPI, APIRouter
+from .routers import notes, users, tags, colors
 from pydantic import BaseModel
 
 from .dependencies import create_db_and_tables
 
 app = FastAPI()
+
+router = APIRouter(
+    prefix="/notes",
+    tags=["notes"],
+    responses={404: {"description": "Not found"}},
+)
 
 class Item(BaseModel):
     name: str
