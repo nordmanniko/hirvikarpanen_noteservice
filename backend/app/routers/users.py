@@ -1,11 +1,16 @@
 from typing import Annotated
 
-from fastapi import Depends, FastAPI, HTTPException, Query, APIRouter
-from sqlmodel import Field, Session, SQLModel, create_engine, select
+from fastapi import Depends, HTTPException, Query, APIRouter, status
+from sqlmodel import Field, Session, SQLModel, select, Relationship
+from typing import Optional
+
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 
 from ..dependencies import get_session
 
 SessionDep = Annotated[Session, Depends(get_session)]
+
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 router = APIRouter(
     prefix="/users",
@@ -27,7 +32,9 @@ class UserPublic(UserBase):
 # Model that has every parameter
 class User(UserBase, table=True):
     __tablename__ = "user"
-    id: int | None = Field(default=None, primary_key=True)
+    id: Optional[int] = Field(default=None, primary_key=True)
+
+    notes: list["Note"] = Relationship(back_populates="user", cascade="all, delete-orphan")
 
 # Model used for creating
 class UserCreate(UserBase):
@@ -35,9 +42,18 @@ class UserCreate(UserBase):
 
 # Model used for updating
 class UserUpdate(SQLModel):
-    user: str | None = None
-    email: str | None = None
-    password: str | None = None
+    user: Optional[str] = None
+    email: Optional[str] = None
+    password: Optional[str] = None
+
+def fake_decode_token(token):
+    return User(
+        username=token + "fakedecoded", email="john@example.com", user="John Doe"
+    )
+
+async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
+    user = fake_decode_token(token)
+    return user
 
 # POST users
 @router.post("/", response_model=UserPublic)
@@ -57,6 +73,17 @@ def read_users(
 ):
     users = session.exec(select(User).offset(offset).limit(limit)).all()
     return users
+
+# GET current user
+@router.get("/me", response_model=UserPublic)
+def read_current_user(
+    current_user: Annotated[User, Depends(get_current_user)],
+    session: SessionDep,
+):
+    user = session.get(User, current_user.id)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return user
 
 # GET users by id
 @router.get("/{userID}", response_model=UserPublic)

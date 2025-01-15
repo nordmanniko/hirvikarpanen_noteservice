@@ -2,6 +2,7 @@ from typing import Annotated
 
 from fastapi import Depends, FastAPI, HTTPException, Query, APIRouter
 from sqlmodel import Field, Session, SQLModel, select, Relationship
+from typing import Optional
 
 from ..dependencies import get_session
 
@@ -15,12 +16,13 @@ router = APIRouter(
 
 # The base model
 class NoteBase(SQLModel):
-    note_h1: str | None = Field(default=None)
+    note_h1: Optional[str] = Field(default=None)
     note: str = Field(..., nullable=False)
-    img: str | None = Field(default=None)
-    date: str | None = Field(default=None)
-    tag_id: int | None = Field(default=None, index=True)
-    color_id: int | None = Field(default=None, index=True)
+    img: Optional[str] = Field(default=None)
+    date: Optional[str] = Field(default=None)
+    tag_id: Optional[int] = Field(default=None, index=True)
+    color_id: Optional[int] = Field(default=None, index=True)
+    user_id: int = Field(index=True)
 
 # Model for public visibility
 class NotePublic(NoteBase):
@@ -29,12 +31,14 @@ class NotePublic(NoteBase):
 # Model that has every parameter
 class Note(NoteBase, table=True):
     __tablename__ = "note"
-    id: int | None = Field(default=None, primary_key=True)
-    tag_id: int | None = Field(default=None, foreign_key="tag.id", index=True)
-    color_id: int | None = Field(default=None, foreign_key="color.id", index=True)
+    id: Optional[int] = Field(default=None, primary_key=True)
+    tag_id: Optional[int] = Field(default=None, foreign_key="tag.id", index=True, ondelete="SET NULL")
+    color_id: Optional[int] = Field(default=None, foreign_key="color.id", index=True, ondelete="SET NULL")
+    user_id: int = Field(foreign_key="user.id", index=True, ondelete="CASCADE")
 
-    tag: "Tag" = Relationship(back_populates="note")
-    color: "Color" = Relationship(back_populates="note")
+    tag: Optional["Tag"] = Relationship(back_populates="notes")
+    color: Optional["Color"] = Relationship(back_populates="notes")
+    user: "User" = Relationship(back_populates="notes")
 
 # Model used for creating
 class NoteCreate(NoteBase):
@@ -42,12 +46,12 @@ class NoteCreate(NoteBase):
 
 # Model used for updating
 class NoteUpdate(SQLModel):
-    note_h1: str | None = None
-    note: str | None = None
-    img: str | None = None
-    date: str | None = None
-    tag_id: int | None = None
-    color_id: int | None = None
+    note_h1: Optional[str] = None
+    note: Optional[str] = None
+    img: Optional[str] = None
+    date: Optional[str] = None
+    tag_id: Optional[int] = None
+    color_id: Optional[int] = None
 
 # POST notes
 @router.post("/", response_model=NotePublic)

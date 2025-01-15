@@ -1,7 +1,8 @@
 from typing import Annotated
 
-from fastapi import Depends, FastAPI, HTTPException, Query, APIRouter
-from sqlmodel import Field, Session, SQLModel, create_engine, select
+from fastapi import Depends, HTTPException, Query, APIRouter
+from sqlmodel import Field, Session, SQLModel, select, Relationship
+from typing import Optional
 
 from ..dependencies import get_session
 
@@ -24,7 +25,9 @@ class TagPublic(TagBase):
 # Model that has every parameter
 class Tag(TagBase, table=True):
     __tablename__ = "tag"
-    id: int | None = Field(default=None, primary_key=True)
+    id: Optional[int] = Field(default=None, primary_key=True)
+
+    notes: list["Note"] = Relationship(back_populates="tag")
 
 # Model used for creating
 class TagCreate(TagBase):
@@ -32,7 +35,7 @@ class TagCreate(TagBase):
 
 # Model used for updating
 class TagUpdate(SQLModel):
-    tag: str | None = None
+    tag: Optional[str] = None
 
 # POST tags
 @router.post("/", response_model=TagPublic)

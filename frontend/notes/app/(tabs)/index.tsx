@@ -3,10 +3,12 @@ import ColorPicker, { Panel1, Swatches, Preview, OpacitySlider, HueSlider, } fro
 import { Link } from 'expo-router';
 import {SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
 import React, {useState} from 'react';
+import NotepadPopup from './writeanote';
 export default function Index() {
-  const [writenewVisible, setwritenewVisible] = useState(false);
+    const [onClose, setOnClose] = useState(false);
     const [showColorModal, setShowColorModal] = useState(false);
     const [showTextEditor, setShowTextEditor] = useState(false);
+    const [onSave, setOnSave] = useState({});
     const onSelectColor = ({ hex }) => {
       // do something with the selected color.
       console.log(hex);
@@ -23,17 +25,17 @@ export default function Index() {
         <Modal
           animationType="slide"
           transparent={true}
-          visible={writenewVisible}
+          visible={onClose}
           onRequestClose={() => {
             Alert.alert('Modal has been closed.');
-            setwritenewVisible(!writenewVisible);
+            setOnClose(!onClose);
           }}>
             
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
             <Pressable
             style={[styles.backButton, styles.buttonClose]}
-            onPress={() => setwritenewVisible(!writenewVisible)}>
+            onPress={() => setOnClose(!onClose)}>
             <Text style={styles.textStyle}>Back</Text>
             </Pressable>
             <Text style={styles.h1}>Write a new note</Text>
@@ -62,7 +64,7 @@ export default function Index() {
               <TextInput style={styles.input}></TextInput>
               <Pressable
                 style={[styles.backButton, styles.buttonOpen]}
-                onPress={() => setwritenewVisible(true)}>
+                onPress={() => setOnClose(true)}>
                 <Text style={styles.textStyle}></Text>
               </Pressable>
             </View>
@@ -70,7 +72,7 @@ export default function Index() {
         </Modal>
         <Pressable
           style={[styles.backButton, styles.buttonOpen]}
-          onPress={() => setwritenewVisible(true)}>
+          onPress={() => setOnClose(true)}>
           <Text style={styles.textStyle}>Write a new note</Text>
         </Pressable>
       </SafeAreaView>

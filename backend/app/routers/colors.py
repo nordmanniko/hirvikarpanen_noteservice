@@ -1,8 +1,8 @@
-import sys
 from typing import Annotated
 
-from fastapi import Depends, FastAPI, HTTPException, Query, APIRouter
-from sqlmodel import Field, Session, SQLModel, create_engine, select
+from fastapi import Depends, HTTPException, Query, APIRouter
+from sqlmodel import Field, Session, SQLModel, select, Relationship
+from typing import Optional
 
 from ..dependencies import get_session
 
@@ -25,7 +25,9 @@ class ColorPublic(ColorBase):
 # Model that has every parameter
 class Color(ColorBase, table=True):
     __tablename__ = "color"
-    id: int | None = Field(default=None, primary_key=True)
+    id: Optional[int] = Field(default=None, primary_key=True)
+
+    notes: list["Note"] = Relationship(back_populates="color")
 
 # Model used for creating
 class ColorCreate(ColorBase):
@@ -33,7 +35,7 @@ class ColorCreate(ColorBase):
 
 # Model used for updating
 class ColorUpdate(SQLModel):
-    color: str | None = None
+    color: Optional[str] = None
 
 # POST colors
 @router.post("/", response_model=ColorPublic)

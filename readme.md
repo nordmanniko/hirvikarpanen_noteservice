@@ -70,9 +70,21 @@
 - fastapi dev app/main.py
 - käytä `deactivate` kun lopetat
 - ??????
+
 ## Miten frontend
 - mene /notes 
 - käytä `npx expo start`
 
 ## testing api locally
-uvicorn main:app --reload
+- uvicorn main:app --reload
+
+## lataukset
+- back
+- pip install "fastapi[standard]"
+- pip install pyjwt
+
+
+## Mitä backend tehty
+- yhteys database ja backend välillä
+- kun user deleted, poistaa kaikki notes, tags ja colors userilta
+- started semi security
