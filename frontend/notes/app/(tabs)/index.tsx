@@ -1,17 +1,17 @@
 import { Alert, Modal, StyleSheet, Pressable, Text, View, TextInput, Button} from 'react-native';
-import ColorPicker, { Panel1, Swatches, Preview, OpacitySlider, HueSlider, } from 'reanimated-color-picker';
 import { Link } from 'expo-router';
 import {SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
 import React, {useState} from 'react';
 import NotepadPopup from './writeanote';
 export default function Index() {
     const [onClose, setOnClose] = useState(false);
-    const [showColorModal, setShowColorModal] = useState(false);
-    const [showTextEditor, setShowTextEditor] = useState(false);
     const [onSave, setOnSave] = useState({});
-    const onSelectColor = ({ hex }) => {
-      // do something with the selected color.
-      console.log(hex);
+    
+
+    const handleSaveNote = (note) => {
+      setOnSave(note); // Save the note
+      setOnClose(false); // Close the modal
+      console.log(note);
     };
     return (
 
@@ -22,54 +22,11 @@ export default function Index() {
       </Link>
       <SafeAreaProvider>
       <SafeAreaView style={styles.centeredView}>
-        <Modal
-          animationType="slide"
-          transparent={true}
-          visible={onClose}
-          onRequestClose={() => {
-            Alert.alert('Modal has been closed.');
-            setOnClose(!onClose);
-          }}>
-            
-          <View style={styles.centeredView}>
-            <View style={styles.modalView}>
-            <Pressable
-            style={[styles.backButton, styles.buttonClose]}
-            onPress={() => setOnClose(!onClose)}>
-            <Text style={styles.textStyle}>Back</Text>
-            </Pressable>
-            <Text style={styles.h1}>Write a new note</Text>
-                
-                  <View style={styles.container}>{/*värinvalinta*/}
-                    <Button title='Color Picker' onPress={() => setShowColorModal(true)} />
-                    <Modal visible={showColorModal} animationType='slide' style={styles.centeredView}>
-                      <ColorPicker style={{ width: '70%' }} value='red' onComplete={onSelectColor}>
-                      <Preview />
-                          <View>
-                            <Panel1/>
-                            <HueSlider />
-                          </View>
-                          <View>
-                            {/* <Text>Opacity</Text> */}
-                            <OpacitySlider />
-                          </View>
-                        <Swatches />
-                      </ColorPicker>
-
-                      <Button title='Ok' onPress={() => setShowColorModal(false)} />
-                    </Modal>
-                  </View>
-                
-              <Text style={styles.textStyle}>Title</Text>
-              <TextInput style={styles.input}></TextInput>
-              <Pressable
-                style={[styles.backButton, styles.buttonOpen]}
-                onPress={() => setOnClose(true)}>
-                <Text style={styles.textStyle}></Text>
-              </Pressable>
-            </View>
-          </View>
-        </Modal>
+        {onClose && (
+            <NotepadPopup
+              sendNote={handleSaveNote}
+              onClose={() => setOnClose(false)}
+            />)}
         <Pressable
           style={[styles.backButton, styles.buttonOpen]}
           onPress={() => setOnClose(true)}>

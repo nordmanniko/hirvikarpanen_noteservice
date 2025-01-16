@@ -1,20 +1,26 @@
 import React, { useState } from 'react';
 import { Modal, View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import ColorPicker, { Panel1, Swatches, Preview, OpacitySlider, HueSlider, } from 'reanimated-color-picker';
 
-const NotepadPopup = ({ visible, onClose, onSave }) => {
+const NotepadPopup = ({sendNote, onClose}) => {
   const [title, setTitle] = useState('');
   const [note, setNote] = useState('');
+  const [color, setColor] = useState('');
+  const [showColorModal, setShowColorModal] = useState(false);
 
   const handleSave = () => {
-    onSave({ title, note });
+    sendNote({ title, note, color});
     setTitle('');
     setNote('');
-    onClose();
+    setColor('');
   };
-
+  const onSelectColor = ({ hex }) => {
+    // do something with the selected color.
+    console.log(hex);
+    setColor(hex)
+  };
   return (
     <Modal
-      visible={visible}
       animationType="slide"
       transparent={true}
       onRequestClose={onClose}
@@ -38,7 +44,25 @@ const NotepadPopup = ({ visible, onClose, onSave }) => {
             multiline={true}
             numberOfLines={4}
           />
-
+            
+            {/*<View style={styles.container}>{/*värinvalinta*/}
+              {/*<Button title='Color Picker' onPress={() => setShowColorModal(true)} />
+              <Modal visible={showColorModal} animationType='slide' style={styles.centeredView}>*/}
+                <ColorPicker style={{ width: '70%' }} value='red' onComplete={onSelectColor}>
+                  <Preview />
+                      <View>
+                        <Panel1/>
+                        <HueSlider />
+                      </View>
+                      <View>
+                        {/* <Text>Opacity</Text> */}
+                        <OpacitySlider />
+                      </View>
+                    <Swatches />
+                </ColorPicker>
+              {/*</View><Button title='Ok' onPress={() => setShowColorModal(false)} />
+              </Modal>
+            </View>*/}
           <View style={styles.buttonRow}>
             <Button title="Cancel" onPress={onClose} color="gray" />
             <Button title="Save" onPress={handleSave} color="blue" />
