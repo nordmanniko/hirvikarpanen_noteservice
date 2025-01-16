@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Modal, View, Text, TextInput, Button, StyleSheet } from 'react-native';
+import { Modal, View, Text, TextInput, Button, StyleSheet, Pressable } from 'react-native';
 import ColorPicker, { Panel1, Swatches, Preview, OpacitySlider, HueSlider, } from 'reanimated-color-picker';
 
 const NotepadPopup = ({sendNote, onClose}) => {
@@ -19,14 +19,20 @@ const NotepadPopup = ({sendNote, onClose}) => {
     console.log(hex);
     setColor(hex)
   };
+  const handleOverlayClick = () => {
+    //if(title !== '' && note !== '') handleSave();
+    onClose();
+    
+  };
   return (
     <Modal
       animationType="slide"
       transparent={true}
       onRequestClose={onClose}
     >
-      <View style={styles.overlay}>
-        <View style={styles.popupContainer}>
+      <Pressable style={styles.overlay} 
+      onPress={handleOverlayClick}>
+        <View style={styles.popupContainer} >
           <Text style={styles.heading}>New Note</Text>
 
           <TextInput
@@ -68,7 +74,7 @@ const NotepadPopup = ({sendNote, onClose}) => {
             <Button title="Save" onPress={handleSave} color="blue" />
           </View>
         </View>
-      </View>
+      </Pressable>
     </Modal>
   );
 };
