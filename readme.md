@@ -80,8 +80,9 @@
 
 ## lataukset
 - mene /back
-- pip install "fastapi[standard]"
 - python -m venv .venv
+- käytä `.venv\Scripts\Activate.ps1`
+- pip install "fastapi[standard]"
 - pip install mysqlclient
 
 
