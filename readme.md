@@ -87,9 +87,19 @@ lataukset
 - uvicorn main:app --reload
 
 ## lataukset
-- back
+- mene /back
 - pip install "fastapi[standard]"
+- python -m venv .venv
+- pip install mysqlclient
+
+
+
+## muita latauksia jotka voivat olla tarpeellisia
 - pip install pyjwt
+- pip install "sqlmodel[sqlalchemy]"
+- pip install "pymysql"
+- pip install "alembic"
+- pip install "python-dotenv"
 
 
 ## Mitä backend tehty
