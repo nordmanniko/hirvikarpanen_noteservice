@@ -23,7 +23,6 @@ class UserBase(SQLModel):
     user: str = Field(..., nullable=False)
     email: str = Field(..., nullable=False, unique=True, regex=r'^\S+@\S+\.\S+$')
     password: str = Field(..., nullable=False, min_length=5)
-    # kesken tähän
 
 # Model for public visibility
 class UserPublic(UserBase):
