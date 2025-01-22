@@ -72,8 +72,16 @@
 - ??????
 
 ## Miten frontend
+lataukset
+- npm install --save-dev metro metro-core
+    reactnavigation
+- npm install @react-navigation/native
+- npm install react-native-screens react-native-safe-area-context react-native-gesture-handler react-native-reanimated react-native-svg
+- npm install @react-navigation/bottom-tabs
+
 - mene /notes 
 - käytä `npx expo start`
+- npx react-native start --port=8082 /?entiedä ajaako saman asian kuin npx expo start mutta 8082 on käytettävä koska phpmyadmin runnaa 8081 portissa
 
 ## testing api locally
 - uvicorn main:app --reload
@@ -88,3 +96,9 @@
 - yhteys database ja backend välillä
 - kun user deleted, poistaa kaikki notes, tags ja colors userilta
 - started semi security
+
+## metro bundler (sisäänrakenettu vite mutta vain react nativessa) 
+- npx react-native start --reset-cache /voi korjata ongelmia
+
+## axios
+- käytämme axiosta koska sisään rakennettu fetch api on huonompi

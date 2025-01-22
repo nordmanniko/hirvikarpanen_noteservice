@@ -1,18 +1,26 @@
 import React, { useState } from 'react';
 import { Modal, View, Text, TextInput, Button, StyleSheet, Pressable } from 'react-native';
 import ColorPicker, { Panel1, Swatches, Preview, OpacitySlider, HueSlider, } from 'reanimated-color-picker';
+import api from '../../services/api';
 
 const NotepadPopup = ({sendNote, onClose}) => {
   const [title, setTitle] = useState('');
   const [note, setNote] = useState('');
   const [color, setColor] = useState('');
   const [showColorModal, setShowColorModal] = useState(false);
-
-  const handleSave = () => {
-    sendNote({ title, note, color});
+//värille oma ja tägeille lähetykset
+  const handleSave = async () => {
+    try {
+      const response = await api.post('/notes', {"note_h1":title,"note":note});
+      console.log('Note saved:', response.data);
+      alert('Note saved successfully!');
+    } catch (error) {
+      console.error('Error saving note:', error);
+      alert('Failed to save the note.');
+    }
     setTitle('');
     setNote('');
-    setColor('');
+    onClose();
   };
   const onSelectColor = ({ hex }) => {
     // do something with the selected color.
@@ -30,8 +38,8 @@ const NotepadPopup = ({sendNote, onClose}) => {
       transparent={true}
       onRequestClose={onClose}
     >
-      <Pressable style={styles.overlay} 
-      onPress={handleOverlayClick}>
+      {/* <Pressable style={styles.overlay} 
+      onPress={handleOverlayClick}> */}
         <View style={styles.popupContainer} >
           <Text style={styles.heading}>New Note</Text>
 
@@ -74,7 +82,7 @@ const NotepadPopup = ({sendNote, onClose}) => {
             <Button title="Save" onPress={handleSave} color="blue" />
           </View>
         </View>
-      </Pressable>
+      {/* </Pressable> */}
     </Modal>
   );
 };
