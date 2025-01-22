@@ -34,7 +34,7 @@ class Note(NoteBase, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
     tag_id: Optional[int] = Field(default=None, foreign_key="tag.id", index=True, ondelete="SET NULL")
     color_id: Optional[int] = Field(default=None, foreign_key="color.id", index=True, ondelete="SET NULL")
-    user_id: int = Field(foreign_key="user.id", index=True, ondelete="CASCADE")
+    user_id: int = Field(foreign_key="user.id", index=True, ondelete="CASCADE")#TÄYTYY OLLA OPTIONAL
 
     tag: Optional["Tag"] = Relationship(back_populates="notes")
     color: Optional["Color"] = Relationship(back_populates="notes")
