@@ -86,26 +86,15 @@ lataukset
 ## testing api locally
 - uvicorn main:app --reload
 
-## lataukset
+## backend lataukset
 - mene /back
 - python -m venv .venv
 - käytä `.venv\Scripts\Activate.ps1`
-- pip install "fastapi[standard]"
-- pip install mysqlclient
-
-
-
-## muita latauksia jotka voivat olla tarpeellisia
-- pip install pyjwt
-- pip install "sqlmodel[sqlalchemy]"
-- pip install "pymysql"
-- pip install "alembic"
-- pip install "python-dotenv"
-
+- pip install -r requirements.txt
 
 ## Mitä backend tehty
 - yhteys database ja backend välillä
-- kun user deleted, poistaa kaikki notes, tags ja colors userilta
+- kun user deleted, poistaa kaikki notes, tags ja colors userilta toivottavasti
 - started semi security
 
 ## metro bundler (sisäänrakenettu vite mutta vain react nativessa) 
