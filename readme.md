@@ -68,17 +68,14 @@
 - mene /backend
 - käytä `.venv\Scripts\Activate.ps1` kun muokkaat
 - fastapi dev app/main.py
-- käytä `deactivate` kun lopetat
-- ??????
+- käytä `deactivate` jos haluat venv pois
 
 ## Miten frontend
-lataukset
-- npm install --save-dev metro metro-core
-    reactnavigation
-- npm install @react-navigation/native
-- npm install react-native-screens react-native-safe-area-context react-native-gesture-handler react-native-reanimated react-native-svg
-- npm install @react-navigation/bottom-tabs
+### lataukset
+- mene /notes 
+- `npm i` (toivottavasti)
 
+### käynnistys
 - mene /notes 
 - käytä `npx expo start`
 - npx react-native start --port=8082 /?entiedä ajaako saman asian kuin npx expo start mutta 8082 on käytettävä koska phpmyadmin runnaa 8081 portissa

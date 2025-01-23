@@ -11,7 +11,7 @@ const NotepadPopup = ({sendNote, onClose}) => {
 //värille oma ja tägeille lähetykset
   const handleSave = async () => {
     try {
-      const response = await api.post('/notes/', {"note_h1":title,"note":note, "img":"string", "date":"string", "tag_id":1, "color_id":1,"user_id":1});
+      const response = await api.post('/notes/', {"note_h1":title,"note":note, "user_id":1});
       console.log('Note saved:', response.data);
       alert('Note saved successfully!');
     } catch (error) {
