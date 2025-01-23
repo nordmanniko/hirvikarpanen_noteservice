@@ -65,9 +65,15 @@
 | picture (?) |
 
 ## Miten backend
+### lataukset
+- lataa venv `python -m venv .venv`
+- käytä `.venv\Scripts\Activate.ps1`
+- lataa kaikki dependency `pip install -r requirements.txt`
+
+### käynnistys
 - mene /backend
-- käytä `.venv\Scripts\Activate.ps1` kun muokkaat
-- fastapi dev app/main.py
+- käytä `.venv\Scripts\Activate.ps1`
+- `fastapi dev app/main.py`
 - käytä `deactivate` jos haluat venv pois
 
 ## Miten frontend
@@ -78,24 +84,19 @@
 ### käynnistys
 - mene /notes 
 - käytä `npx expo start`
-- npx react-native start --port=8082 /?entiedä ajaako saman asian kuin npx expo start mutta 8082 on käytettävä koska phpmyadmin runnaa 8081 portissa
+- `npx react-native start --port=8082` en tiedä ajaako saman asian kuin npx expo start mutta 8082 on käytettävä koska phpmyadmin runnaa 8081 portissa
+---
 
-## testing api locally
+### testing api locally
 - uvicorn main:app --reload
 
-## backend lataukset
-- mene /back
-- python -m venv .venv
-- käytä `.venv\Scripts\Activate.ps1`
-- pip install -r requirements.txt
-
-## Mitä backend tehty
+### Mitä backend tehty
 - yhteys database ja backend välillä
 - kun user deleted, poistaa kaikki notes, tags ja colors userilta toivottavasti
 - started semi security
 
-## metro bundler (sisäänrakenettu vite mutta vain react nativessa) 
+### metro bundler (sisäänrakenettu vite mutta vain react nativessa) 
 - npx react-native start --reset-cache /voi korjata ongelmia
 
-## axios
+### axios
 - käytämme axiosta koska sisään rakennettu fetch api on huonompi
