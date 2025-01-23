@@ -11,7 +11,9 @@ from .dependencies import create_db_and_tables
 app = FastAPI()
 
 origins = [
+    "http://localhost:8082",#Mahdollisesti vaihdettava
     "http://localhost",
+    "http://localhost:",
 ]
 
 app.add_middleware(
@@ -30,4 +32,3 @@ app.include_router(colors.router)
 @app.on_event("startup")
 def on_startup():
     create_db_and_tables() # Skippaa jos on olemassa, drop database muutoksille
-
