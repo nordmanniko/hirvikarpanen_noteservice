@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
 import { Modal, View, Text, TextInput, Button, StyleSheet, Pressable } from 'react-native';
 import ColorPicker, { Panel1, Swatches, Preview, OpacitySlider, HueSlider, } from 'reanimated-color-picker';
-import api from '../../services/api';
+import api from '../services/api';
 
-const NotepadPopup = ({sendNote, onClose}) => {
+export default function  NotepadPopup({setOnClose}) {
   const [title, setTitle] = useState('');
   const [note, setNote] = useState('');
   const [color, setColor] = useState('');
   const [showColorModal, setShowColorModal] = useState(false);
 //värille oma ja tägeille lähetykset
+  const handleClose = () => {
+    setOnClose(false);
+  };
   const handleSave = async () => {
     try {
       const response = await api.post('/notes/', {"note_h1":title,"note":note, "user_id":1});
@@ -20,7 +23,7 @@ const NotepadPopup = ({sendNote, onClose}) => {
     }
     setTitle('');
     setNote('');
-    onClose();
+    setOnClose(false);
   };
   const onSelectColor = ({ hex }) => {
     // do something with the selected color.
@@ -29,14 +32,14 @@ const NotepadPopup = ({sendNote, onClose}) => {
   };
   const handleOverlayClick = () => {
     //if(title !== '' && note !== '') handleSave();
-    onClose();
+    handleClose();
     
   };
   return (
     <Modal
       animationType="slide"
       transparent={true}
-      onRequestClose={onClose}
+      onRequestClose={()=>handleClose()}
     >
       {/* <Pressable style={styles.overlay} 
       onPress={handleOverlayClick}> */}
@@ -78,7 +81,7 @@ const NotepadPopup = ({sendNote, onClose}) => {
               </Modal>
             </View>*/}
           <View style={styles.buttonRow}>
-            <Button title="Cancel" onPress={onClose} color="gray" />
+            <Button title="Cancel" onPress={() => handleClose()} color="gray" />
             <Button title="Save" onPress={handleSave} color="blue" />
           </View>
         </View>
@@ -127,5 +130,3 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
 });
-
-export default NotepadPopup;

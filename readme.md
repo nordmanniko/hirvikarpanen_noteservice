@@ -84,7 +84,7 @@
 ### käynnistys
 - mene /notes 
 - käytä `npx expo start`
-- `npx react-native start --port=8082` en tiedä ajaako saman asian kuin npx expo start mutta 8082 on käytettävä koska phpmyadmin runnaa 8081 portissa
+- `npx expo start --port=8082` en tiedä ajaako saman asian kuin npx expo start mutta 8082 on käytettävä koska phpmyadmin runnaa 8081 portissa
 ---
 
 ### testing api locally

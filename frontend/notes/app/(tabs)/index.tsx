@@ -2,17 +2,11 @@ import { Alert, Modal, StyleSheet, Pressable, Text, View, TextInput, Button} fro
 import { Link } from 'expo-router';
 import {SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
 import React, {useState} from 'react';
-import NotepadPopup from './writeanote';
+import NotepadPopup from '../writeanote';
 export default function Index() {
     const [onClose, setOnClose] = useState(false);
     const [onSave, setOnSave] = useState({});
-    
 
-    const handleSaveNote = (note) => {
-      setOnSave(note); // Save the note
-      setOnClose(false); // Close the modal
-      console.log(note);
-    };
     return (
 
       <View style={styles.container}>
@@ -24,8 +18,7 @@ export default function Index() {
       <SafeAreaView style={styles.centeredView}>
         {onClose && (
             <NotepadPopup
-              sendNote={handleSaveNote}
-              onClose={() => setOnClose(false)}
+              setOnClose={setOnClose}
             />)}
         <Pressable
           style={[styles.backButton, styles.buttonOpen]}
