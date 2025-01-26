@@ -3,6 +3,7 @@ import { Link } from 'expo-router';
 import {SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
 import React, {useState} from 'react';
 import NotepadPopup from '../writeanote';
+import getNotes from '../../components/notes';
 export default function Index() {
     const [onClose, setOnClose] = useState(false);
     const [onSave, setOnSave] = useState({});
@@ -25,6 +26,7 @@ export default function Index() {
           onPress={() => setOnClose(true)}>
           <Text style={styles.textStyle}>Write a new note</Text>
         </Pressable>
+        {getNotes()}
       </SafeAreaView>
     </SafeAreaProvider>
     </View>
