@@ -13,8 +13,12 @@ export default function  NotepadPopup({setOnClose}) {
     setOnClose(false);
   };
   const handleSave = async () => {
+    if(title === ''){ 
+    alert('You cant save an empty note. Please fill the title field.');
+    return;
+    }
     try {
-      const response = await api.post('/notes/', {"note_h1":title,"note":note, "user_id":1});
+      const response = await api.post('/notes/', {"note_h1":title,"note":note, "user_id":1});/*pitää vaihtaa tokenilta saatavaksi tuo userid*/
       console.log('Note saved:', response.data);
       alert('Note saved successfully!');
     } catch (error) {
@@ -39,20 +43,19 @@ export default function  NotepadPopup({setOnClose}) {
     <Modal
       animationType="slide"
       transparent={true}
-      onRequestClose={()=>handleClose()}
+      onRequestClose={() => handleClose()}
     >
-      {/* <Pressable style={styles.overlay} 
-      onPress={handleOverlayClick}> */}
-        <View style={styles.popupContainer} >
+      <View style={styles.overlay}>
+        <View style={styles.popupContainer}>
           <Text style={styles.heading}>New Note</Text>
-
+  
           <TextInput
             style={styles.input}
             placeholder="Title"
             value={title}
             onChangeText={setTitle}
           />
-
+  
           <TextInput
             style={styles.textArea}
             placeholder="Write your notes here..."
@@ -61,31 +64,21 @@ export default function  NotepadPopup({setOnClose}) {
             multiline={true}
             numberOfLines={4}
           />
-            
-            {/*<View style={styles.container}>{/*värinvalinta*/}
-              {/*<Button title='Color Picker' onPress={() => setShowColorModal(true)} />
-              <Modal visible={showColorModal} animationType='slide' style={styles.centeredView}>*/}
-                <ColorPicker style={{ width: '70%' }} value='red' onComplete={onSelectColor}>
-                  <Preview />
-                      <View>
-                        <Panel1/>
-                        <HueSlider />
-                      </View>
-                      <View>
-                        {/* <Text>Opacity</Text> */}
-                        <OpacitySlider />
-                      </View>
-                    <Swatches />
-                </ColorPicker>
-              {/*</View><Button title='Ok' onPress={() => setShowColorModal(false)} />
-              </Modal>
-            </View>*/}
+  
+          <ColorPicker style={{ width: '70%' }} value="red" onComplete={onSelectColor}>
+            <Preview />
+            <Panel1 />
+            <HueSlider />
+            <OpacitySlider />
+            <Swatches />
+          </ColorPicker>
+  
           <View style={styles.buttonRow}>
             <Button title="Cancel" onPress={() => handleClose()} color="gray" />
             <Button title="Save" onPress={handleSave} color="blue" />
           </View>
         </View>
-      {/* </Pressable> */}
+      </View>
     </Modal>
   );
 };
@@ -103,6 +96,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 10,
     elevation: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   heading: {
     fontSize: 18,

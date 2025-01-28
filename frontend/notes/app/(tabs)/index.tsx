@@ -1,20 +1,29 @@
 import { Alert, Modal, StyleSheet, Pressable, Text, View, TextInput, Button} from 'react-native';
 import { Link } from 'expo-router';
 import {SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import NotepadPopup from '../writeanote';
 import getNotes from '../../components/notes';
 export default function Index() {
     const [onClose, setOnClose] = useState(false);
     const [onSave, setOnSave] = useState({});
-
+    const receiveNote = () => {
+      const [notes, setNotes] = useState([]);
+      useEffect(() => {
+        getNotes().then((res) => {
+          setNotes(res);
+        }));
+      }, []);
+    }
     return (
-
       <View style={styles.container}>
         <Text style={styles.h1}>Home screen</Text>
       <Link href="/about" style={styles.button}>
+        <Text>
         Go to About screen
+        </Text>
       </Link>
+      <Pressable style={[styles.backButton, styles.buttonOpen]} onPress={()=>receiveNote()} style={styles.button}><Text>Get notes</Text></Pressable>
       <SafeAreaProvider>
       <SafeAreaView style={styles.centeredView}>
         {onClose && (

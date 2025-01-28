@@ -81,10 +81,10 @@ def read_note(noteID: int, session: SessionDep):
     return note
 
 # GET notes by user id
-@router.get("/user/{user_id}", response_model=list[NotePublic])
+@router.get("/user/", response_model=list[NotePublic])
 def read_notes(user_id: int, session: SessionDep,offset: int = 0,
         limit: Annotated[int, Query(le=100)] = 100):
-    note = session.exec(select(Note).offset(offset).limit(limit)).where(Note.user_id == user_id).all()
+    note = session.exec(select(Note).offset(offset).limit(limit)).where(Note.user_id == 1).all()#user id saatava tokenilta
     if not note:
         raise HTTPException(status_code=404, detail="Note not found")
     return note
