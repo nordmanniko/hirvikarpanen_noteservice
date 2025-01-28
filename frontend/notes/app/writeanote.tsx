@@ -1,17 +1,24 @@
 import React, { useState } from 'react';
 import { Modal, View, Text, TextInput, Button, StyleSheet, Pressable } from 'react-native';
 import ColorPicker, { Panel1, Swatches, Preview, OpacitySlider, HueSlider, } from 'reanimated-color-picker';
-import api from '../../services/api';
+import api from '../services/api';
 
-const NotepadPopup = ({sendNote, onClose}) => {
+export default function  NotepadPopup({setOnClose}) {
   const [title, setTitle] = useState('');
   const [note, setNote] = useState('');
   const [color, setColor] = useState('');
   const [showColorModal, setShowColorModal] = useState(false);
 //värille oma ja tägeille lähetykset
+  const handleClose = () => {
+    setOnClose(false);
+  };
   const handleSave = async () => {
+    if(title === ''){ 
+    alert('You cant save an empty note. Please fill the title field.');
+    return;
+    }
     try {
-      const response = await api.post('/notes/', {"note_h1":title,"note":note, "user_id":1});
+      const response = await api.post('/notes/', {"note_h1":title,"note":note, "user_id":1});/*pitää vaihtaa tokenilta saatavaksi tuo userid*/
       console.log('Note saved:', response.data);
       alert('Note saved successfully!');
     } catch (error) {
@@ -20,7 +27,7 @@ const NotepadPopup = ({sendNote, onClose}) => {
     }
     setTitle('');
     setNote('');
-    onClose();
+    setOnClose(false);
   };
   const onSelectColor = ({ hex }) => {
     // do something with the selected color.
@@ -29,27 +36,26 @@ const NotepadPopup = ({sendNote, onClose}) => {
   };
   const handleOverlayClick = () => {
     //if(title !== '' && note !== '') handleSave();
-    onClose();
+    handleClose();
     
   };
   return (
     <Modal
       animationType="slide"
       transparent={true}
-      onRequestClose={onClose}
+      onRequestClose={() => handleClose()}
     >
-      {/* <Pressable style={styles.overlay} 
-      onPress={handleOverlayClick}> */}
-        <View style={styles.popupContainer} >
+      <View style={styles.overlay}>
+        <View style={styles.popupContainer}>
           <Text style={styles.heading}>New Note</Text>
-
+  
           <TextInput
             style={styles.input}
             placeholder="Title"
             value={title}
             onChangeText={setTitle}
           />
-
+  
           <TextInput
             style={styles.textArea}
             placeholder="Write your notes here..."
@@ -58,31 +64,21 @@ const NotepadPopup = ({sendNote, onClose}) => {
             multiline={true}
             numberOfLines={4}
           />
-            
-            {/*<View style={styles.container}>{/*värinvalinta*/}
-              {/*<Button title='Color Picker' onPress={() => setShowColorModal(true)} />
-              <Modal visible={showColorModal} animationType='slide' style={styles.centeredView}>*/}
-                <ColorPicker style={{ width: '70%' }} value='red' onComplete={onSelectColor}>
-                  <Preview />
-                      <View>
-                        <Panel1/>
-                        <HueSlider />
-                      </View>
-                      <View>
-                        {/* <Text>Opacity</Text> */}
-                        <OpacitySlider />
-                      </View>
-                    <Swatches />
-                </ColorPicker>
-              {/*</View><Button title='Ok' onPress={() => setShowColorModal(false)} />
-              </Modal>
-            </View>*/}
+  
+          <ColorPicker style={{ width: '70%' }} value="red" onComplete={onSelectColor}>
+            <Preview />
+            <Panel1 />
+            <HueSlider />
+            <OpacitySlider />
+            <Swatches />
+          </ColorPicker>
+  
           <View style={styles.buttonRow}>
-            <Button title="Cancel" onPress={onClose} color="gray" />
+            <Button title="Cancel" onPress={() => handleClose()} color="gray" />
             <Button title="Save" onPress={handleSave} color="blue" />
           </View>
         </View>
-      {/* </Pressable> */}
+      </View>
     </Modal>
   );
 };
@@ -100,6 +96,8 @@ const styles = StyleSheet.create({
     backgroundColor: 'white',
     borderRadius: 10,
     elevation: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   heading: {
     fontSize: 18,
@@ -127,5 +125,3 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
 });
-
-export default NotepadPopup;

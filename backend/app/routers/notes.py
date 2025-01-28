@@ -80,6 +80,15 @@ def read_note(noteID: int, session: SessionDep):
         raise HTTPException(status_code=404, detail="Note not found")
     return note
 
+# GET notes by user id
+@router.get("/user/", response_model=list[NotePublic])
+def read_notes(user_id: int, session: SessionDep,offset: int = 0,
+        limit: Annotated[int, Query(le=100)] = 100):
+    note = session.exec(select(Note).offset(offset).limit(limit)).where(Note.user_id == 1).all()#user id saatava tokenilta
+    if not note:
+        raise HTTPException(status_code=404, detail="Note not found")
+    return note
+
 # UPDATE note by id
 @router.patch("/{noteID}", response_model=NotePublic)
 def update_note(noteID: int, note: NoteUpdate, session: SessionDep):
