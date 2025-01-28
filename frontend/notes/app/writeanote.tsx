@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Modal, View, Text, TextInput, Button, StyleSheet, Pressable } from 'react-native';
 import ColorPicker, { Panel1, Swatches, Preview, OpacitySlider, HueSlider, } from 'reanimated-color-picker';
 import api from '../services/api';
+import {loadNotes} from '../components/Notes';
 
 export default function  NotepadPopup({setOnClose}) {
   const [title, setTitle] = useState('');
@@ -20,6 +21,7 @@ export default function  NotepadPopup({setOnClose}) {
     try {
       const response = await api.post('/notes/', {"note_h1":title,"note":note, "user_id":1});/*pitää vaihtaa tokenilta saatavaksi tuo userid*/
       console.log('Note saved:', response.data);
+      loadNotes();
       alert('Note saved successfully!');
     } catch (error) {
       console.error('Error saving note:', error);
