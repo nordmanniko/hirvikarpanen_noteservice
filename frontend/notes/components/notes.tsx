@@ -13,7 +13,8 @@ interface Note {
 
 const loadNotes = (notes: Note[], setNotes: Dispatch<SetStateAction<Note[]>>) => {
   setNotes([]);
-  getNotes().then((res) => {
+  const userID = 1;
+  getNotes(userID).then((res) => {
     if(res.length<=0){
     setNotes(res);
     console.log("notes null: ",notes,", res:",res);

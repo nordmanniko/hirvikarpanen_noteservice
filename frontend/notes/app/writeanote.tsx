@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Modal, View, Text, TextInput, Button, StyleSheet, Pressable } from 'react-native';
 import ColorPicker, { Panel1, Swatches, Preview, OpacitySlider, HueSlider, } from 'reanimated-color-picker';
 import api from '../services/api';
-import {loadNotes} from '../components/Notes';
+import {loadNotes} from '../components/notes';
 
 export default function  NotepadPopup({setOnClose}) {
   const [title, setTitle] = useState('');

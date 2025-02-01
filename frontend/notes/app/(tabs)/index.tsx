@@ -3,7 +3,7 @@ import { Link } from 'expo-router';
 import {SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
 import React, {useEffect, useState} from 'react';
 import NotepadPopup from '../writeanote';
-import {Notes} from '../../components/Notes';
+import {Notes} from '../../components/notes';
 
 export default function Index() {
     const [onClose, setOnClose] = useState(false);
