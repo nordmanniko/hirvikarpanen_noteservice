@@ -1,9 +1,9 @@
 import api from './api';
 import React, {useState} from 'react';
 
-const getNotes = async () => {
+const getNotes = async (userID: number) => {
 try {
-    const response = await api.get('/notes/user'/*toi 1 täytyy vaihtaa get user id*/);//userid pitää vaihtaa lähetettyyn?
+    const response = await api.get(`/notes/user/${userID}`);
     return response.data;
   } catch (error) {
     console.error('Error getting note:', error);

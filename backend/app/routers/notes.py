@@ -3,10 +3,13 @@ from typing import Annotated
 from fastapi import Depends, FastAPI, HTTPException, Query, APIRouter
 from sqlmodel import Field, Session, SQLModel, select, Relationship
 from typing import Optional
+import time
+import logging
 
 from ..dependencies import get_session
 
 SessionDep = Annotated[Session, Depends(get_session)]
+logging.basicConfig(level=logging.INFO)
 
 router = APIRouter(
     prefix="/notes",
@@ -81,17 +84,23 @@ def read_note(noteID: int, session: SessionDep):
     return note
 
 # GET notes by user id
-@router.get("/user/", response_model=list[NotePublic])
-def read_notes(user_id: int, session: SessionDep,offset: int = 0,
-        limit: Annotated[int, Query(le=100)] = 100):
-    note = session.exec(select(Note).offset(offset).limit(limit)).where(Note.user_id == 1).all()#user id saatava tokenilta
-    if not note:
-        raise HTTPException(status_code=404, detail="Note not found")
-    return note
+@router.get("/user/{user_id}", response_model=list[NotePublic])
+def read_notes(session: SessionDep, user_id: int = 1, offset: int = 0, limit: Annotated[int, Query(le=100)] = 100):
+    logging.info(f"Fetching notes for user_id: {user_id}, offset: {offset}, limit: {limit}")
+    start_time = time.time()
+    try:
+        notes = session.exec(select(Note).where(Note.user_id == user_id).offset(offset).limit(limit)).all()
+        logging.info(f"Query executed in {time.time() - start_time} seconds")
+        if not notes:
+            raise HTTPException(status_code=404, detail="Note not found")
+        return notes
+    except Exception as e:
+        logging.error(f"Error fetching notes: {e}")
+        raise HTTPException(status_code=500, detail="Internal Server Error")
 
 # UPDATE note by id
 @router.patch("/{noteID}", response_model=NotePublic)
-def update_note(noteID: int, note: NoteUpdate, session: SessionDep):
+def update_note(noteID: int, session: SessionDep, note: NoteUpdate):
     note_db = session.get(Note, noteID)
     if not note_db:
         raise HTTPException(status_code=404, detail="Note not found")
