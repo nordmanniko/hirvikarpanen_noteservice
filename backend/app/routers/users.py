@@ -1,15 +1,12 @@
 from typing import Annotated
+from ..dependencies import get_session
 
 from fastapi import Depends, HTTPException, Query, APIRouter, status
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from sqlmodel import Field, Session, SQLModel, select, Relationship
 from typing import Optional
 
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-
-from ..dependencies import get_session
-
 SessionDep = Annotated[Session, Depends(get_session)]
-
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 
 router = APIRouter(
@@ -45,15 +42,6 @@ class UserUpdate(SQLModel):
     email: Optional[str] = None
     password: Optional[str] = None
 
-def fake_decode_token(token):
-    return User(
-        username=token + "fakedecoded", email="john@example.com", user="John Doe"
-    )
-
-async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
-    user = fake_decode_token(token)
-    return user
-
 # POST users
 @router.post("/", response_model=UserPublic)
 def create_user(user: UserCreate, session: SessionDep):
@@ -72,17 +60,6 @@ def read_users(
 ):
     users = session.exec(select(User).offset(offset).limit(limit)).all()
     return users
-
-# GET current user
-@router.get("/me", response_model=UserPublic)
-def read_current_user(
-    current_user: Annotated[User, Depends(get_current_user)],
-    session: SessionDep,
-):
-    user = session.get(User, current_user.id)
-    if not user:
-        raise HTTPException(status_code=404, detail="User not found")
-    return user
 
 # GET users by id
 @router.get("/{userID}", response_model=UserPublic)
