@@ -25,7 +25,8 @@ const loadNotes = (notes: Note[], setNotes: Dispatch<SetStateAction<Note[]>>) =>
     }
   });
 };
-const DeleteNote = (id: number) => {
+const sendDeleteNote = (id: number) => {
+  console.log('sendDeleteNote called with id:', id);
   Alert.alert(
     'Delete Note',
     'Are you sure you want to delete this note?',
@@ -37,9 +38,14 @@ const DeleteNote = (id: number) => {
       },
       {
         text: 'OK',
-        onPress: () => console.log('OK Pressed'),
-
-
+        onPress: async () => {
+          const result = await deleteNotes(id);
+          if (result) {
+            Alert.alert('Note deleted successfully!');
+          } else {
+            Alert.alert('Failed to delete note.');
+          }
+        },
       },
     ],
     {
@@ -56,8 +62,7 @@ function BigModal({ note, setOpnNote }: { note: Note | null; setOpnNote: Dispatc
         transparent={true}
         visible={note !== null}
         onRequestClose={() => setOpnNote(null)}
-        style={styles.inspectionModal}
-      >
+        style={styles.inspectionModal}>
         <View style={styles.centeredView}>
           <View style={styles.modalView}>
           <Pressable
@@ -75,7 +80,7 @@ function BigModal({ note, setOpnNote }: { note: Note | null; setOpnNote: Dispatc
             <Text style={styles.noteText}>{note?.note}</Text>
             <Text style={styles.noteText}>{note?.date}</Text>
             <Pressable
-            onPress={() => DeleteNote(id: note?.id)}
+              onPress={() => {note && sendDeleteNote(note.id);console.log('Note object:', note);setOpnNote(null)}}
               onPressIn={() => setIsPressed(true)}
               onPressOut={() => setIsPressed(false)}
               style={[
@@ -226,7 +231,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   
-  closeDeletePressed: {
+  deleteButtonPressed: {
     backgroundColor: '#3a3d4a', // Darker shade when pressed
   },
 });
