@@ -4,4 +4,6 @@ uvicorn
 pymysql
 sqlmodel
 mysqlclient
+pyjwt
+passlib[bcrypt]
 #pip install -r requirements.txt

@@ -2,3 +2,4 @@
 */__pycache__/
 app/routers/__pycache__
 backend\app\routers\__pycache__
+.env
