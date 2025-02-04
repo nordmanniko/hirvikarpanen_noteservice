@@ -10,4 +10,13 @@ try {
     return [];
   }
 }
-export default getNotes;
+const deleteNotes = async (id: number) => {
+  try {
+    const response = await api.delete(`/notes/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error deleting note:', error);
+    return [];
+  }
+}
+export = {getNotes, deleteNotes};
