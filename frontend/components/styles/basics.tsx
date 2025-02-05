@@ -1,5 +1,5 @@
 import {StyleSheet} from 'react-native';
-export const basic=StyleSheet.create({
+const basic=StyleSheet.create({
         container: {
           flex: 1,
           backgroundColor: '#25292e',
@@ -91,4 +91,33 @@ export const basic=StyleSheet.create({
             marginBottom: 15,
             textAlign: 'center',
           },
+          popupContainer: {
+            width: '90%',
+            padding: 20,
+            backgroundColor: 'white',
+            borderRadius: 10,
+            elevation: 5,
+            alignItems: 'center',
+            justifyContent: 'center',
+          },
+          heading: {
+            fontSize: 18,
+            fontWeight: 'bold',
+            marginBottom: 10,
+          },
+          textArea: {
+            borderWidth: 1,
+            borderColor: 'gray',
+            borderRadius: 5,
+            padding: 10,
+            height: 100,
+            textAlignVertical: 'top',
+          },
+          buttonRow: {
+            flexDirection: 'row',
+            justifyContent: 'space-between',
+            marginTop: 10,
+          },
     })
+
+export default basic;

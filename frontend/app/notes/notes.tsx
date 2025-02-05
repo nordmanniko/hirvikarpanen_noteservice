@@ -5,8 +5,8 @@ import React, { useState, useEffect, Dispatch, SetStateAction } from 'react';
 import {getNotes} from '../../services/notes.service';
 import NotepadPopup from '@/app/notes/writeanote';
 //Styles
-import {basic} from '../../components/styles/basics'; 
-import {noteStyle} from '../../components/styles/noteStyle';
+import basic from '../../components/styles/basics'; 
+import noteStyle from '../../components/styles/noteStyle';
 
 //other functions
 import BigModal from './noteFunctions/inspec_note';

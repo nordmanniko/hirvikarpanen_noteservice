@@ -1,5 +1,5 @@
 import {StyleSheet} from 'react-native';
-export const noteStyle=StyleSheet.create({
+const noteStyle=StyleSheet.create({
     
   inspectionModal: {
     flex: 1,
@@ -86,3 +86,4 @@ export const noteStyle=StyleSheet.create({
     backgroundColor: '#2196F3',
   },
 })
+export default noteStyle;

@@ -3,8 +3,8 @@ import { Link } from 'expo-router';
 import {SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
 import React, {useEffect, useState} from 'react';
 import Notes from '../notes/notes';
-
-import {basic} from '../../components/styles/basics'
+//Styles
+import basic from '@/components/styles/basics';
 export default function Index() {
     return (
       <View style={basic.container}>
