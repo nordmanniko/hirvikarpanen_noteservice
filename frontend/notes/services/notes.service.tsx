@@ -19,4 +19,4 @@ const deleteNotes = async (id: number) => {
     return [];
   }
 }
-export = {getNotes, deleteNotes};
+export {getNotes, deleteNotes};

@@ -1,10 +1,15 @@
-import React, { useState } from 'react';
+import React, { useState, Dispatch, SetStateAction} from 'react';
 import { Modal, View, Text, TextInput, Button, StyleSheet, Pressable } from 'react-native';
 import ColorPicker, { Panel1, Swatches, Preview, OpacitySlider, HueSlider, } from 'reanimated-color-picker';
 import api from '../services/api';
-import {loadNotes} from '../components/notes';
-
-export default function  NotepadPopup({setOnClose}) {
+interface Note {
+  id: number;
+  note_h1: string;
+  note: string;
+  img: string;
+  date: string;
+}
+export default function  NotepadPopup({setOnClose, setNotes}: {setOnClose: Dispatch<SetStateAction<boolean>>; setNotes: Dispatch<SetStateAction<Note[]>>}) {
   const [title, setTitle] = useState('');
   const [note, setNote] = useState('');
   const [color, setColor] = useState('');
@@ -19,13 +24,12 @@ export default function  NotepadPopup({setOnClose}) {
     return;
     }
     try {
-      const response = await api.post('/notes/', {"note_h1":title,"note":note, "user_id":1});/*pitää vaihtaa tokenilta saatavaksi tuo userid*/
+      const response = await api.post('/notes/', {"note_h1":title,"note":note, "user_id":1});/*pitää vaihtaa tokenilta saatavaksi tuo userid*/ 
       console.log('Note saved:', response.data);
-      loadNotes();
-      alert('Note saved successfully!');
+      setNotes(notes => [...notes, response.data]);
     } catch (error) {
       console.error('Error saving note:', error);
-      alert('Failed to save the note.');
+      alert('The note couldnt save. Please try again.');
     }
     setTitle('');
     setNote('');
