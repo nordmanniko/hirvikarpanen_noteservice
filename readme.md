@@ -78,7 +78,6 @@
 
 ## Miten frontend
 ### lataukset
-- mene /notes 
 - `npm i` (toivottavasti)
 
 ### käynnistys

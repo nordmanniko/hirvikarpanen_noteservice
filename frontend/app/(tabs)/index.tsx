@@ -2,7 +2,7 @@ import { Alert, Modal, StyleSheet, Pressable, Text, View, TextInput, Button} fro
 import { Link } from 'expo-router';
 import {SafeAreaView, SafeAreaProvider} from 'react-native-safe-area-context';
 import React, {useEffect, useState} from 'react';
-import {Notes} from '../../components/notes';
+import Notes from '../notes/notes';
 
 import {basic} from '../../components/styles/basics'
 export default function Index() {

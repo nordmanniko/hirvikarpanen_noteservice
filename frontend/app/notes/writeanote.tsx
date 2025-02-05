@@ -1,7 +1,7 @@
 import React, { useState, Dispatch, SetStateAction} from 'react';
 import { Modal, View, Text, TextInput, Button, StyleSheet, Pressable } from 'react-native';
 import ColorPicker, { Panel1, Swatches, Preview, OpacitySlider, HueSlider, } from 'reanimated-color-picker';
-import api from '../services/api';
+import api from '../../services/api';
 interface Note {
   id: number;
   note_h1: string;
