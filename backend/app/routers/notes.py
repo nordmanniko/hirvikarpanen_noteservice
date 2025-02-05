@@ -9,7 +9,7 @@ import logging
 from ..dependencies import get_session
 
 SessionDep = Annotated[Session, Depends(get_session)]
-logging.basicConfig(level=logging.INFO)
+#logging.basicConfig(level=logging.INFO)
 
 router = APIRouter(
     prefix="/notes",

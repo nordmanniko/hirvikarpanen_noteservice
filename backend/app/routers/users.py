@@ -3,11 +3,17 @@ from ..dependencies import get_session
 
 from fastapi import Depends, HTTPException, Query, APIRouter, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from pydantic import EmailStr
 from sqlmodel import Field, Session, SQLModel, select, Relationship
+from sqlalchemy.exc import IntegrityError
 from typing import Optional
+
+from passlib.context import CryptContext
 
 SessionDep = Annotated[Session, Depends(get_session)]
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
+
+pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
 
 router = APIRouter(
     prefix="/users",
@@ -18,7 +24,7 @@ router = APIRouter(
 # The base model
 class UserBase(SQLModel):
     user: str = Field(..., nullable=False)
-    email: str = Field(..., nullable=False, unique=True, regex=r'^\S+@\S+\.\S+$')
+    email: EmailStr = Field(..., nullable=False, unique=True)
     password: str = Field(..., nullable=False, min_length=5)
 
 # Model for public visibility
@@ -32,24 +38,49 @@ class User(UserBase, table=True):
 
     notes: list["Note"] = Relationship(back_populates="user", cascade_delete=True) #, cascade="all, delete-orphan"
 
+# //! TEST
+class TokenUser(SQLModel):
+    user: User
+    token: str
+
 # Model used for creating
 class UserCreate(UserBase):
     pass
+
+class UserLogin(SQLModel):
+    id: int
+    token: str
 
 # Model used for updating
 class UserUpdate(SQLModel):
     user: Optional[str] = None
     email: Optional[str] = None
-    password: Optional[str] = None
+    password: Optional[str] = None 
 
-# POST users
-@router.post("/", response_model=UserPublic)
-def create_user(user: UserCreate, session: SessionDep):
-    db_user = User.model_validate(user)
-    session.add(db_user)
-    session.commit()
-    session.refresh(db_user)
-    return db_user
+# POST register user
+@router.post("/register", response_model=TokenUser)
+def register_user(user: UserCreate, session: SessionDep):
+    try:
+        db_user = User.model_validate(user)
+
+        db_user.password = pwd_context.hash(db_user.password)
+
+        session.add(db_user)
+        session.commit()
+        session.refresh(db_user)
+        return {"user":db_user,"token":"heregoestoken"}
+    except IntegrityError:
+        session.rollback()
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail=[{"type":"validation_error", "msg":"Email already in use"}],
+            headers={"WWW-Authenticate": "Bearer"},
+        )
+
+# POST login user
+@router.post("/login", response_model=UserLogin) # //TODO
+def login_user(user: UserLogin, session: SessionDep):
+    pass
 
 # GET users
 @router.get("/", response_model=list[UserPublic])
