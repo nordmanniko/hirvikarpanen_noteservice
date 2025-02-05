@@ -32,3 +32,7 @@ app.include_router(colors.router)
 @app.on_event("startup")
 def on_startup():
     create_db_and_tables() # Skippaa jos on olemassa, drop database muutoksille
+# if user.logged_in
+    #@app.get("/notes/{user_id}") #parempi turvattu tapa hakea tähän user_idn perusteella huono hakea olisiko username hyvä?
+# def read_item(item_id: int, q: Optional[str] = None):
+#     return {"item_id": item_id, "q": q}
