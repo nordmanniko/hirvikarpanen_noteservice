@@ -1,9 +1,12 @@
 import { View, Modal, Pressable, Text, Alert } from 'react-native';
-import React, { useState, Dispatch, SetStateAction } from 'react';
+import React, { useState, Dispatch, SetStateAction, useEffect } from 'react';
+
+import {deleteNotes} from '@/services/notes.service';
+import HandleClose from '../writeanote';
+import EditNote from '../noteFunctions/edit_note';
+
 import basic from '@/components/styles/basics'; 
 import noteStyle from '@/components/styles/noteStyle';
-import {deleteNotes} from '@/services/notes.service';
-import handleClose from '../writeanote';
 
 interface Note {
     id: number;
@@ -12,7 +15,7 @@ interface Note {
     img: string;
     date: string;
   }
-function BigModal({ note, setOpnNote, setNotes}: { note: Note | null; setOpnNote: Dispatch<SetStateAction<Note | null>>; setNotes: Dispatch<SetStateAction<Note[]>> }) {
+function BigModal({ note, setOpnNote, notes, setNotes}: { note: Note | null; setOpnNote: Dispatch<SetStateAction<Note | null>>; notes: Note[]; setNotes: Dispatch<SetStateAction<Note[]>> }) {
 
 const sendDeleteNote = async (id: number, setNotes: Dispatch<SetStateAction<Note[]>>) => {
     console.log('sendDeleteNote called with id:', id);
@@ -28,50 +31,55 @@ const sendDeleteNote = async (id: number, setNotes: Dispatch<SetStateAction<Note
             console.error('Error deleting note:', error);
           }
   }
-
+  
 
     const [isPressed, setIsPressed] = useState(false);
+    const [whichReturn, setWhichReturn] = useState('normal');
+    useEffect(() => {
+      console.log('whichReturn updated to:', whichReturn);
+  }, [whichReturn]);
     return (
-        <Modal
-        animationType="slide"
-        transparent={true}
-        visible={note !== null}
-        onRequestClose={() => handleClose()}>
-        <View  style={basic.overlay}>
-            <View
-                style={basic.inspectionModal}>
-                <View style={basic.centeredView}>
+      <Modal
+          animationType="slide"
+          transparent={true}
+          visible={note !== null}
+          onRequestClose={() => <HandleClose />}
+      >
+          <View style={basic.overlay}>
+              <View style={basic.inspectionModal}>
                   <View style={basic.modalView}>
-                  <Pressable
-                      onPress={() => setOpnNote(null)}
-                      onPressIn={() => setIsPressed(true)}
-                      onPressOut={() => setIsPressed(false)}
-                      style={[
-                        noteStyle.closeButton,
-                        isPressed && noteStyle.closeButtonPressed,
-                      ]}
-                    >
-                      <Text style={noteStyle.closeText}>Close</Text>
-                    </Pressable>
-                    <Text style={noteStyle.noteH1}>{note?.note_h1}</Text>
-                    <Text style={noteStyle.noteText}>{note?.note}</Text>
-                    <Text style={noteStyle.noteText}>{note?.date}</Text>
-                    <Pressable
-                      onPress={() => {note && sendDeleteNote(note.id, setNotes);console.log('Note object:', note);setOpnNote(null)}}
-                      onPressIn={() => setIsPressed(true)}
-                      onPressOut={() => setIsPressed(false)}
-                      style={[
-                        noteStyle.deleteButton,
-                        isPressed && noteStyle.deleteButtonPressed,
-                      ]}>
-                      <Text style={noteStyle.closeText}>DELETE</Text>
-                    </Pressable>
+                      {whichReturn === 'normal' ? (
+                          <>
+                              <Pressable
+                                  onPress={() => {sendDeleteNote(note?.id, setNotes);setOpnNote(null)}}
+                                  onPressIn={() => setIsPressed(true)}
+                                  onPressOut={() => setIsPressed(false)}
+                                  style={[
+                                      noteStyle.deleteButton,
+                                      isPressed && noteStyle.deleteButtonPressed,
+                                  ]}
+                              >
+                                  <Text style={noteStyle.closeText}>DELETE</Text>
+                              </Pressable>
+                              <Pressable
+                                  onPress={() => {
+                                      setWhichReturn('edit');
+                                      console.log(whichReturn,'EDIT pressed');
+                                  }}
+                                  onPressIn={() => setIsPressed(true)}
+                                  onPressOut={() => setIsPressed(false)}
+                              >
+                                  <Text style={noteStyle.closeText}>EDIT</Text>
+                              </Pressable>
+                          </>
+                      ) : whichReturn === 'edit' ? (
+                          <EditNote note={note} setOpnNote={setOpnNote} notes={notes} setNotes={setNotes}  whichReturn={whichReturn}/>
+                      ) : null}
                   </View>
-                </View>
-            </View>
+              </View>
           </View>
-        </Modal>
-    );
+      </Modal>
+  );
   }
   
 export default BigModal;

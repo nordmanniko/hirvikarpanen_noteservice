@@ -2,8 +2,9 @@ import React, { useState, Dispatch, SetStateAction} from 'react';
 import { Modal, View, Text, TextInput, Button, StyleSheet, Pressable } from 'react-native';
 import ColorPicker, { Panel2, Swatches, Preview, OpacitySlider, HueSlider, } from 'reanimated-color-picker';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
-import api from '../../services/api';
 import basic from '@/components/styles/basics';
+import {addNote} from '@/services/notes.service';
+
 interface Note {
   id: number;
   note_h1: string;
@@ -16,7 +17,7 @@ export default function  NotepadPopup({setOnClose, setNotes}: {setOnClose: Dispa
   const [note, setNote] = useState('');
   const [color, setColor] = useState('');
   const [showColorModal, setShowColorModal] = useState(false);
-//värille oma ja tägeille lähetykset
+//värille oma ja taijelle lähetykset
   const handleClose = () => {
     setOnClose(false);
   };
@@ -26,7 +27,7 @@ export default function  NotepadPopup({setOnClose, setNotes}: {setOnClose: Dispa
     return;
     }
     try {
-      const response = await api.post('/notes/', {"note_h1":title,"note":note, "user_id":1});/*pitää vaihtaa tokenilta saatavaksi tuo userid*/ 
+      const response = await addNote(title, note, color, 1);/*pitää vaihtaa tokenilta saatavaksi tuo userid*/ 
       console.log('Note saved:', response.data);
       setNotes(notes => [...notes, response.data]);
     } catch (error) {
@@ -49,12 +50,12 @@ export default function  NotepadPopup({setOnClose, setNotes}: {setOnClose: Dispa
   };
   return (
     <Modal
-      animationType="slide"
-      transparent={true}
-      onRequestClose={() => handleClose()}
-    >
-      <View style={basic.overlay}>
-        <View style={basic.popupContainer}>
+    animationType="slide"
+    transparent={true}
+    onRequestClose={() => handleClose()}
+  >
+    <View style={basic.overlay}>
+      <View style={basic.popupContainer}>
           <Text style={basic.heading}>New Note</Text>
   
           <TextInput
@@ -86,7 +87,7 @@ export default function  NotepadPopup({setOnClose, setNotes}: {setOnClose: Dispa
             <Button title="Cancel" onPress={() => handleClose()} color="gray" />
             <Button title="Save" onPress={handleSave} color="blue" />
           </View>
-        </View>
+          </View>
       </View>
     </Modal>
   );

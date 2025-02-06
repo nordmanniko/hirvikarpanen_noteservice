@@ -68,7 +68,7 @@ function Notes() {
         </Pressable>    
         </SafeAreaView>
       <Stack.Screen options={{ title: 'Notes' }} />
-      {opnNote && <BigModal note={opnNote} setOpnNote={setOpnNote} setNotes={setNotes}/>}
+      {opnNote && <BigModal note={opnNote} setOpnNote={setOpnNote} notes={notes} setNotes={setNotes}/>}
       <View style={basic.container}>
         {notes.map((note) => (
           <NoteItem key={note.note_h1} note={note} setOpnNote={setOpnNote} />

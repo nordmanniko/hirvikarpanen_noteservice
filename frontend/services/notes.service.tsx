@@ -19,4 +19,29 @@ const deleteNotes = async (id: number) => {
     return [];
   }
 }
-export {getNotes, deleteNotes};
+const addNote = async (title: string, note: string, userID: number) => {
+  try {
+    const response = await api.post('/notes/', {
+      "note_h1": title,
+      "note": note,
+      "user_id": userID
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error adding note:', error);
+    return [];
+  }
+}
+const editNote = async (id: number, title: string, note: string, userID: number) => {
+  try {
+    const response = await api.patch(`/notes/${id}`, {
+      "note_h1": title,
+      "note": note,
+    });
+    return response.data;
+  } catch (error) {
+    console.error('Error editing note:', error);
+    return [];
+  }
+}
+export {getNotes, deleteNotes, addNote, editNote};
