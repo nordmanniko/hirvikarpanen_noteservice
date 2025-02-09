@@ -85,5 +85,22 @@ const noteStyle=StyleSheet.create({
   buttonClose: {
     backgroundColor: '#2196F3',
   },
+  inspection: {
+    width: '90%',
+    padding: 20,
+    backgroundColor: 'white',
+    borderRadius: 10,
+    elevation: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
+    height: '50%',
+  },
+  modalButtonContainer: {
+    flexDirection: 'row',
+    justifyContent: 'center',
+  },
+  modalButton: {
+    margin: 10,
+  },
 })
 export default noteStyle;

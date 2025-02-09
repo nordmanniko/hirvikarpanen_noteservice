@@ -19,14 +19,15 @@ const deleteNotes = async (id: number) => {
     return [];
   }
 }
-const addNote = async (title: string, note: string, userID: number) => {
+const addNote = async (title: string, note: string, color: string, userID: number) => {
   try {
     const response = await api.post('/notes/', {
       "note_h1": title,
       "note": note,
+      "color": color,
       "user_id": userID
     });
-    return response.data;
+    return response;
   } catch (error) {
     console.error('Error adding note:', error);
     return [];
@@ -38,7 +39,7 @@ const editNote = async (id: number, title: string, note: string, userID: number)
       "note_h1": title,
       "note": note,
     });
-    return response.data;
+    return response;
   } catch (error) {
     console.error('Error editing note:', error);
     return [];

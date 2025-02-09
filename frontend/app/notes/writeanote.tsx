@@ -18,7 +18,7 @@ export default function  NotepadPopup({setOnClose, setNotes}: {setOnClose: Dispa
   const [color, setColor] = useState('');
   const [showColorModal, setShowColorModal] = useState(false);
 //värille oma ja taijelle lähetykset
-  const handleClose = () => {
+  const HandleClose = () => {
     setOnClose(false);
   };
   const handleSave = async () => {
@@ -27,9 +27,15 @@ export default function  NotepadPopup({setOnClose, setNotes}: {setOnClose: Dispa
     return;
     }
     try {
-      const response = await addNote(title, note, color, 1);/*pitää vaihtaa tokenilta saatavaksi tuo userid*/ 
-      console.log('Note saved:', response.data);
-      setNotes(notes => [...notes, response.data]);
+      const userID = 1;/*pitää vaihtaa tokenilta saatavaksi tuo userid*/ 
+      console.log("title:",title,"note:", note, "color:", color  )
+      const response = await addNote(title, note, color, userID);
+      if (response.data) {
+        console.log('Note saved:', response.data);
+        setNotes(notes => [...notes, response.data]);
+      } else {
+        console.error('Error saving note:', response.error);
+      }
     } catch (error) {
       console.error('Error saving note:', error);
       alert('The note couldnt save. Please try again.');
@@ -40,19 +46,23 @@ export default function  NotepadPopup({setOnClose, setNotes}: {setOnClose: Dispa
   };
   const onSelectColor = ({ hex }) => {
     // do something with the selected color.
-    console.log(hex);
+    // console.log(hex);
     setColor(hex)
   };
   const handleOverlayClick = () => {
     //if(title !== '' && note !== '') handleSave();
-    handleClose();
+    HandleClose();
     
+  };
+
+  const handleChange = (setter: Dispatch<SetStateAction<any>>, value: string) => {
+    setter(value);
   };
   return (
     <Modal
     animationType="slide"
     transparent={true}
-    onRequestClose={() => handleClose()}
+    onRequestClose={() => HandleClose()}
   >
     <View style={basic.overlay}>
       <View style={basic.popupContainer}>
@@ -62,18 +72,18 @@ export default function  NotepadPopup({setOnClose, setNotes}: {setOnClose: Dispa
             style={basic.input}
             placeholder="Title"
             value={title}
-            onChangeText={setTitle}
+            onChangeText={text => handleChange(setTitle, text)}
           />
   
           <TextInput
             style={basic.textArea}
             placeholder="Write your notes here..."
             value={note}
-            onChangeText={setNote}
+            onChangeText={text => handleChange(setNote, text)}
             multiline={true}
             numberOfLines={4}
           />
-          <GestureHandlerRootView>
+          {/* <GestureHandlerRootView> */}
             <ColorPicker style={{ width: '70%' }} value="red" onComplete={onSelectColor}>
               <Preview />
               <Panel2 />
@@ -81,10 +91,10 @@ export default function  NotepadPopup({setOnClose, setNotes}: {setOnClose: Dispa
               <OpacitySlider />
               <Swatches />
             </ColorPicker>
-          </GestureHandlerRootView>
+          {/* </GestureHandlerRootView> */}
   
           <View style={basic.buttonRow}>
-            <Button title="Cancel" onPress={() => handleClose()} color="gray" />
+            <Button title="Cancel" onPress={() => HandleClose()} color="gray" />
             <Button title="Save" onPress={handleSave} color="blue" />
           </View>
           </View>

@@ -19,7 +19,7 @@ interface Note {
   date: string;
 }
 
-const loadNotes = (notes: Note[], setNotes: Dispatch<SetStateAction<Note[]>>) => {
+function LoadNotes({ notes, setNotes }: { notes: Note[]; setNotes: Dispatch<SetStateAction<Note[]>> }) {
   setNotes([]);
   const userID = 1;
   getNotes(userID).then((res) => {
@@ -50,8 +50,8 @@ function Notes() {
   const [onClose, setOnClose] = useState(false);
 
   useEffect(() => {
-    loadNotes(notes, setNotes);
-  }, []);
+      LoadNotes({ notes, setNotes });
+  }, [/*notes*/]);
 
   return (
     <>
@@ -66,7 +66,6 @@ function Notes() {
           onPress={() => setOnClose(true)}>
           <Text style={noteStyle.textStyle}>Write a new note</Text>
         </Pressable>    
-        </SafeAreaView>
       <Stack.Screen options={{ title: 'Notes' }} />
       {opnNote && <BigModal note={opnNote} setOpnNote={setOpnNote} notes={notes} setNotes={setNotes}/>}
       <View style={basic.container}>
@@ -74,8 +73,9 @@ function Notes() {
           <NoteItem key={note.note_h1} note={note} setOpnNote={setOpnNote} />
         ))}
       </View>
+        </SafeAreaView>
     </>
   );
 }
 
-export default Notes;
+export {Notes,LoadNotes};

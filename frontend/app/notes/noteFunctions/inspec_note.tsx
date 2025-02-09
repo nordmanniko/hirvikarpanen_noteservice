@@ -2,7 +2,6 @@ import { View, Modal, Pressable, Text, Alert } from 'react-native';
 import React, { useState, Dispatch, SetStateAction, useEffect } from 'react';
 
 import {deleteNotes} from '@/services/notes.service';
-import HandleClose from '../writeanote';
 import EditNote from '../noteFunctions/edit_note';
 
 import basic from '@/components/styles/basics'; 
@@ -43,15 +42,28 @@ const sendDeleteNote = async (id: number, setNotes: Dispatch<SetStateAction<Note
           animationType="slide"
           transparent={true}
           visible={note !== null}
-          onRequestClose={() => <HandleClose />}
+          onRequestClose={() => setOpnNote(null)}
       >
           <View style={basic.overlay}>
-              <View style={basic.inspectionModal}>
-                  <View style={basic.modalView}>
+              <View style={noteStyle.inspection}>
                       {whichReturn === 'normal' ? (
                           <>
+                            <Pressable
+                                    style={noteStyle.backButton}
+                                  onPress={() => {
+                                      setOpnNote(null);setIsPressed(true);
+                                  }}
+                                  onPressIn={() => setIsPressed(true)}
+                                  onPressOut={() => setIsPressed(false)}
+                              >
+                                  <Text style={noteStyle.textStyle}>Back</Text>
+                              </Pressable>
+
+                              <Text style={noteStyle.noteH1}>{note?.note_h1}</Text>
+                              <Text style={noteStyle.noteText}>{note?.note}</Text>
+                              <Text style={basic.text}>{note?.date}</Text>
                               <Pressable
-                                  onPress={() => {sendDeleteNote(note?.id, setNotes);setOpnNote(null)}}
+                                  onPress={() => {sendDeleteNote(note?.id ?? 0, setNotes);setOpnNote(null)}}
                                   onPressIn={() => setIsPressed(true)}
                                   onPressOut={() => setIsPressed(false)}
                                   style={[
@@ -73,9 +85,8 @@ const sendDeleteNote = async (id: number, setNotes: Dispatch<SetStateAction<Note
                               </Pressable>
                           </>
                       ) : whichReturn === 'edit' ? (
-                          <EditNote note={note} setOpnNote={setOpnNote} notes={notes} setNotes={setNotes}  whichReturn={whichReturn}/>
+                          <EditNote note={note} setOpnNote={setOpnNote} notes={notes} setNotes={setNotes}  setWhichReturn={setWhichReturn}/>
                       ) : null}
-                  </View>
               </View>
           </View>
       </Modal>
