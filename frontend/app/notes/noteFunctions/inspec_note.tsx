@@ -1,4 +1,4 @@
-import { View, Modal, Pressable, Text, Alert } from 'react-native';
+import { View, Modal, Pressable, Text, Alert, SafeAreaView } from 'react-native';
 import React, { useState, Dispatch, SetStateAction, useEffect } from 'react';
 
 import {deleteNotes} from '@/services/notes.service';
@@ -18,17 +18,23 @@ function BigModal({ note, setOpnNote, notes, setNotes}: { note: Note | null; set
 
 const sendDeleteNote = async (id: number, setNotes: Dispatch<SetStateAction<Note[]>>) => {
     console.log('sendDeleteNote called with id:', id);
-    try{
-        const result = await deleteNotes(id);
-            if (result) {
-              Alert.alert('Note deleted successfully!');
-              setNotes(notes => notes.filter(note => note.id !== id));
+    try {
+        const result = confirm('Are you sure you want to delete this note? This action cannot be undone.');
+        if (result == true) {
+            const response = await deleteNotes(id);
+            if (response) {
+                Alert.alert('Note deleted successfully!');
+                setNotes(notes => notes.filter(note => note.id !== id));
             } else {
-              Alert.alert('Failed to delete note.');
+                Alert.alert('Failed to delete note.');
             }
-          } catch (error) {
-            console.error('Error deleting note:', error);
-          }
+        }
+    } catch (error) {
+        console.error('Error deleting note:', error);
+        Alert.alert('An error occurred while deleting the note.');
+    } finally {
+        // Added a finally block to ensure proper closure of try-catch blocks
+    }
   }
   
 
@@ -62,18 +68,19 @@ const sendDeleteNote = async (id: number, setNotes: Dispatch<SetStateAction<Note
                               <Text style={noteStyle.noteH1}>{note?.note_h1}</Text>
                               <Text style={noteStyle.noteText}>{note?.note}</Text>
                               <Text style={basic.text}>{note?.date}</Text>
+                              <View style={noteStyle.modalButtonContainer}>
                               <Pressable
                                   onPress={() => {sendDeleteNote(note?.id ?? 0, setNotes);setOpnNote(null)}}
                                   onPressIn={() => setIsPressed(true)}
                                   onPressOut={() => setIsPressed(false)}
-                                  style={[
-                                      noteStyle.deleteButton,
-                                      isPressed && noteStyle.deleteButtonPressed,
+                                  style={[noteStyle.modalButton, basic.buttonOpen
                                   ]}
                               >
                                   <Text style={noteStyle.closeText}>DELETE</Text>
                               </Pressable>
+
                               <Pressable
+                                  style={[noteStyle.modalButton, basic.buttonOpen]}
                                   onPress={() => {
                                       setWhichReturn('edit');
                                       console.log(whichReturn,'EDIT pressed');
@@ -83,6 +90,7 @@ const sendDeleteNote = async (id: number, setNotes: Dispatch<SetStateAction<Note
                               >
                                   <Text style={noteStyle.closeText}>EDIT</Text>
                               </Pressable>
+                              </View>
                           </>
                       ) : whichReturn === 'edit' ? (
                           <EditNote note={note} setOpnNote={setOpnNote} notes={notes} setNotes={setNotes}  setWhichReturn={setWhichReturn}/>

@@ -15,7 +15,7 @@ interface Note {
 export default function  NotepadPopup({setOnClose, setNotes}: {setOnClose: Dispatch<SetStateAction<boolean>>; setNotes: Dispatch<SetStateAction<Note[]>>}) {
   const [title, setTitle] = useState('');
   const [note, setNote] = useState('');
-  const [color, setColor] = useState('');
+  const [color, setColor] = useState('#ff0000');
   const [showColorModal, setShowColorModal] = useState(false);
 //värille oma ja taijelle lähetykset
   const HandleClose = () => {

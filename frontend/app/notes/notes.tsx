@@ -35,7 +35,7 @@ function LoadNotes({ notes, setNotes }: { notes: Note[]; setNotes: Dispatch<SetS
 function NoteItem({ note, setOpnNote }: { note: Note; setOpnNote: Dispatch<SetStateAction<Note | null>> }) {
   return (
     <Pressable style={noteStyle.note} onPress={() => setOpnNote(note)}>
-      <Text style={noteStyle.noteH1}>{note.note_h1}</Text>
+      <Text style={[noteStyle.noteH1/*, { textDecorationLine: 'underline', color: note.color }*/]}>{note.note_h1}</Text>
       <Text style={noteStyle.truncatedText} numberOfLines={3} ellipsizeMode="tail">
         {note.note}
       </Text>

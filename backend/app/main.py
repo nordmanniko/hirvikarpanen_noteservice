@@ -4,7 +4,7 @@ from typing import Annotated
 
 from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from .routers import notes, users, tags, colors
+from .routers import notes, users, tags
 
 from .dependencies import create_db_and_tables
 
@@ -27,7 +27,7 @@ app.add_middleware(
 app.include_router(users.router)
 app.include_router(notes.router)
 app.include_router(tags.router)
-app.include_router(colors.router)
+# app.include_router(colors.router) colors poistettu nykyään vain value
 
 @app.on_event("startup")
 def on_startup():

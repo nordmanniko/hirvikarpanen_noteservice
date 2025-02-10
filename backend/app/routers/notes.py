@@ -24,7 +24,7 @@ class NoteBase(SQLModel):
     img: Optional[str] = Field(default=None)
     date: Optional[str] = Field(default=None)
     tag_id: Optional[int] = Field(default=None, index=True)
-    color_id: Optional[int] = Field(default=None, index=True)
+    color: Optional[str] = Field(default=None)
     user_id: int = Field(index=True)
 
 # Model for public visibility
@@ -36,11 +36,9 @@ class Note(NoteBase, table=True):
     __tablename__ = "note"
     id: Optional[int] = Field(default=None, primary_key=True)
     tag_id: Optional[int] = Field(default=None, foreign_key="tag.id", index=True, ondelete="SET NULL")
-    color_id: Optional[int] = Field(default=None, foreign_key="color.id", index=True, ondelete="SET NULL")
     user_id: int = Field(foreign_key="user.id", index=True, ondelete="CASCADE")#TÄYTYY OLLA OPTIONAL
 
     tag: Optional["Tag"] = Relationship(back_populates="notes")
-    color: Optional["Color"] = Relationship(back_populates="notes")
     user: "User" = Relationship(back_populates="notes")
 
 # Model used for creating
@@ -54,7 +52,7 @@ class NoteUpdate(SQLModel):
     img: Optional[str] = None
     date: Optional[str] = None
     tag_id: Optional[int] = None
-    color_id: Optional[int] = None
+    color: Optional[str] = None
 
 # POST notes
 @router.post("/", response_model=NotePublic)
