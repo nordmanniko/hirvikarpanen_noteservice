@@ -4,6 +4,7 @@ import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
 import React, { useState, useEffect, Dispatch, SetStateAction } from 'react';
 import {getNotes} from '../../services/notes.service';
 import NotepadPopup from '@/app/notes/writeanote';
+import DropDownPicker from 'react-native-dropdown-picker';
 //Styles
 import basic from '../../components/styles/basics'; 
 import noteStyle from '../../components/styles/noteStyle';
@@ -16,6 +17,7 @@ interface Note {
   note_h1: string;
   note: string;
   img: string;
+  color: string;
   date: string;
 }
 
@@ -24,10 +26,25 @@ function LoadNotes({ notes, setNotes }: { notes: Note[]; setNotes: Dispatch<SetS
   const userID = 1;
   getNotes(userID).then((res) => {
     if (res.length <= 0) {
-      setNotes(res);
       console.log("notes null: ", notes, ", res:", res);
     } else {
-      setNotes(res);
+      const temp = [];
+      res.forEach((res: Note) => {
+      temp.push({
+        id: res.id,
+        note_h1: res.note_h1,
+        note: res.note,
+        img: res.img,
+        color: res.color,
+        date: res.date
+      });
+      });
+      temp.sort((a, b) => {
+        const dateA = new Date(a.date.split('/').reverse().join('-')); // Convert 'DD/MM/YYYY' to 'YYYY-MM-DD'
+        const dateB = new Date(b.date.split('/').reverse().join('-'));
+        return dateB.getTime() - dateA.getTime();
+    });
+      setNotes(temp);
       console.log("notes contains: ", notes, ", res:", res);
     }
   });
@@ -48,9 +65,11 @@ function Notes() {
   const [notes, setNotes] = useState<Note[]>([]);
   const [opnNote, setOpnNote] = useState<Note | null>(null);
   const [onClose, setOnClose] = useState(false);
-
+  
+  const [open, setOpen] = useState(false);
+  const [value, setValue] = useState(null);
   useEffect(() => {
-      LoadNotes({ notes, setNotes });
+      LoadNotes({ notes, setNotes});
   }, [/*notes*/]);
 
   return (
@@ -65,7 +84,7 @@ function Notes() {
           style={[noteStyle.backButton, noteStyle.buttonOpen]}
           onPress={() => setOnClose(true)}>
           <Text style={noteStyle.textStyle}>Write a new note</Text>
-        </Pressable>    
+        </Pressable>
       <Stack.Screen options={{ title: 'Notes' }} />
       {opnNote && <BigModal note={opnNote} setOpnNote={setOpnNote} notes={notes} setNotes={setNotes}/>}
       <View style={basic.container}>

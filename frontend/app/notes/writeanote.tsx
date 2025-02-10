@@ -10,6 +10,7 @@ interface Note {
   note_h1: string;
   note: string;
   img: string;
+  color: string;
   date: string;
 }
 export default function  NotepadPopup({setOnClose, setNotes}: {setOnClose: Dispatch<SetStateAction<boolean>>; setNotes: Dispatch<SetStateAction<Note[]>>}) {
@@ -31,8 +32,15 @@ export default function  NotepadPopup({setOnClose, setNotes}: {setOnClose: Dispa
       console.log("title:",title,"note:", note, "color:", color  )
       const response = await addNote(title, note, color, userID);
       if (response.data) {
-        console.log('Note saved:', response.data);
-        setNotes(notes => [...notes, response.data]);
+        const newNote = {
+          id: response.data.id,
+          note_h1: title,
+          note: note,
+          img: response.data.img,
+          color: color,
+          date: new Date().toISOString(),
+        };
+        setNotes(notes => [...notes, newNote]);
       } else {
         console.error('Error saving note:', response.error);
       }

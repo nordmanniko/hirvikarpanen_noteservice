@@ -25,6 +25,7 @@ const addNote = async (title: string, note: string, color: string, userID: numbe
       "note_h1": title,
       "note": note,
       "color": color,
+      "date": new Date().toLocaleDateString('pt-PT'), /*This stoopid*/
       "user_id": userID
     });
     return response;

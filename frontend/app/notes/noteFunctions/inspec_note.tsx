@@ -8,12 +8,13 @@ import basic from '@/components/styles/basics';
 import noteStyle from '@/components/styles/noteStyle';
 
 interface Note {
-    id: number;
-    note_h1: string;
-    note: string;
-    img: string;
-    date: string;
-  }
+  id: number;
+  note_h1: string;
+  note: string;
+  img: string;
+  color: string;
+  date: string;
+}
 function BigModal({ note, setOpnNote, notes, setNotes}: { note: Note | null; setOpnNote: Dispatch<SetStateAction<Note | null>>; notes: Note[]; setNotes: Dispatch<SetStateAction<Note[]>> }) {
 
 const sendDeleteNote = async (id: number, setNotes: Dispatch<SetStateAction<Note[]>>) => {

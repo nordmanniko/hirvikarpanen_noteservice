@@ -10,11 +10,13 @@ import noteStyle from '@/components/styles/noteStyle';
 import {deleteNotes} from '@/services/notes.service';
 
 interface Note {
-    id: number;
-    note_h1: string;
-    note: string;
-    img: string;
-  }
+  id: number;
+  note_h1: string;
+  note: string;
+  img: string;
+  color: string;
+  date: string;
+}
   
 function EditNote({ note, setOpnNote, notes, setNotes, setWhichReturn}: { note: Note | null; setOpnNote: Dispatch<SetStateAction<Note | null>>; notes: Note[]; setNotes: Dispatch<SetStateAction<Note[]>>; whichReturn: string; setWhichReturn: Dispatch<SetStateAction<string>> }) {
     const [title, setTitle] = useState('');
