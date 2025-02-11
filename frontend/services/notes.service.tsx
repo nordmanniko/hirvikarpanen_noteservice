@@ -47,4 +47,13 @@ const editNote = async (id: number, title: string, note: string, userID: number)
     return [];
   }
 }
-export {getNotes, deleteNotes, addNote, editNote};
+const getTags = async (userID: number) => {
+  try {
+      const response = await api.get(`/tags/user/${userID}`);
+      return response;
+    } catch (error) {
+      console.error('Error getting note:', error);
+      return [];
+    }
+}
+export {getNotes, deleteNotes, addNote, editNote, getTags};

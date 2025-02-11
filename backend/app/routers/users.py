@@ -34,7 +34,8 @@ class User(UserBase, table=True):
     id: Optional[int] = Field(default=None, primary_key=True)
 
     notes: list["Note"] = Relationship(back_populates="user", cascade_delete=True) #, cascade="all, delete-orphan"
-
+    tag: list["Tag"] = Relationship(back_populates="user")
+    
 # Model used for creating
 class UserCreate(UserBase):
     pass

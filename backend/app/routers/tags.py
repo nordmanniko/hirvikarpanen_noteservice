@@ -17,7 +17,8 @@ router = APIRouter(
 # The base model
 class TagBase(SQLModel):
     tag: str = Field(..., nullable=False)
-
+    user_id: int = Field(index=True)
+    
 # Model for public visibility
 class TagPublic(TagBase):
     id: int
@@ -26,8 +27,10 @@ class TagPublic(TagBase):
 class Tag(TagBase, table=True):
     __tablename__ = "tag"
     id: Optional[int] = Field(default=None, primary_key=True)
+    user_id: int = Field(foreign_key="user.id", index=True, ondelete="CASCADE")
 
     notes: list["Note"] = Relationship(back_populates="tag")
+    user: "User" = Relationship(back_populates="tag")
 
 # Model used for creating
 class TagCreate(TagBase):
@@ -63,6 +66,22 @@ def read_tag(tagID: int, session: SessionDep):
     if not tag:
         raise HTTPException(status_code=404, detail="Tag not found")
     return tag
+
+# GET tags by user_id
+@router.get("/user/{user_id}", response_model=list[TagPublic])
+def read_tag(session: SessionDep, tagID: int = 1, offset: int = 0, limit: Annotated[int, Query(le=100)] = 100):
+    logging.info(f"Fetching tags for tagID: {tagID}, offset: {offset}, limit: {limit}")
+    start_time = time.time()
+    try:
+        tag = session.exec(select(Tag).where(Tag.id == tagID).offset(offset).limit(limit)).all()
+        logging.info(f"Query executed in {time.time() - start_time} seconds")
+        if not tag:
+            raise HTTPException(status_code=404, detail="Tag not found")
+        return tag
+    except Exception as e:
+        logging.error(f"Error fetching notes: {e}")
+        raise HTTPException(status_code=500, detail="Internal Server Error")
+
 
 # UPDATE tag by tagID
 @router.patch("/{tagID}", response_model=TagPublic)
