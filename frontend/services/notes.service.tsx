@@ -39,6 +39,7 @@ const editNote = async (id: number, title: string, note: string, userID: number)
     const response = await api.patch(`/notes/${id}`, {
       "note_h1": title,
       "note": note,
+      "date": new Date().toLocaleDateString('pt-PT'), /*This stoopid*/
     });
     return response;
   } catch (error) {
