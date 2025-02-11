@@ -56,7 +56,7 @@ function LoadNotes({ notes, setNotes, filters }: { notes: Note[]; setNotes: Disp
 };
 function NoteItem({ note, setOpnNote }: { note: Note; setOpnNote: Dispatch<SetStateAction<Note | null>> }) {
   return (
-    <Pressable style={[noteStyle.note, { border: 1, borderStyle: 'solid', borderColor: note.color }]} onPress={() => setOpnNote(note)}>
+    <Pressable style={[noteStyle.note, { borderWidth: 2, borderColor: note.color }]} onPress={() => setOpnNote(note)}>
       <Text style={[noteStyle.noteH1, { textDecorationLine: 'underline', textDecorationColor: note.color }]}>{note.note_h1}</Text>
       <Text style={noteStyle.truncatedText} numberOfLines={3} ellipsizeMode="tail">
         {note.note}
