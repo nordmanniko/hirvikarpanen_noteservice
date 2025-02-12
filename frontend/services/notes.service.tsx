@@ -19,14 +19,15 @@ const deleteNotes = async (id: number) => {
     return [];
   }
 }
-const addNote = async (title: string, note: string, color: string, userID: number) => {
+const addNote = async (title: string, note: string, color: string, userID: number, tag_id: number) => {
   try{
     const response = await api.post('/notes/', {
       "note_h1": title,
       "note": note,
       "color": color,
-      "date": new Date().toLocaleDateString('pt-PT'), /*This stoopid*/
-      "user_id": userID
+      "date": new Date().toLocaleDateString('pt-PT'),
+      "user_id": userID,
+      ...(tag_id !== null && { "tag_id": tag_id })
     });
     return response;
     } catch (error) {
@@ -39,7 +40,7 @@ const editNote = async (id: number, title: string, note: string, userID: number)
     const response = await api.patch(`/notes/${id}`, {
       "note_h1": title,
       "note": note,
-      "date": new Date().toLocaleDateString('pt-PT'), /*This stoopid*/
+      "date": new Date().toLocaleDateString('pt-PT'), 
     });
     return response;
   } catch (error) {
@@ -65,4 +66,16 @@ const getTagsByTagID = async (tagID: number) => {
       return [];
     }
 }
-export {getNotes, deleteNotes, addNote, editNote, getTagsByUser, getTagsByTagID};
+const addTag = async (tag: string, userID: number) => {
+  try {
+      const response = await api.post('/tags/', {
+        "tag": tag,
+        "user_id": userID
+      });
+      return response;
+    } catch (error) {
+      console.error('Error adding tag:', error);
+      return [];
+    }
+}
+export {getNotes, deleteNotes, addNote, editNote, getTagsByUser, getTagsByTagID, addTag};

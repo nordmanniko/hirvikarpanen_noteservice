@@ -3,7 +3,7 @@ import { Link, Stack } from 'expo-router';
 import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
 import React, { useState, useEffect, useLayoutEffect, Dispatch, SetStateAction } from 'react';
 import {getNotes, getTagsByUser, getTagsByTagID} from '../../services/notes.service';
-import NotepadPopup from '@/app/notes/writeanote';
+import {NotepadPopup} from '@/app/notes/writeanote';
 import DropDownPicker from 'react-native-dropdown-picker';
 //Styles
 import basic from '../../components/styles/basics'; 
@@ -78,21 +78,6 @@ function LoadNotes({ notes, setNotes, value, tags, setTags }: { notes: Note[]; s
       }    
   });
 }
-
-// function GetFilterColors({ notes }: { notes: Note[] }) {
-//   const uniqueColors = notes.reduce((acc, note, index) => {
-//     if (!acc.some(c => c.color === note.color)) {
-//       return [...acc, { 
-//         label: `Filter by color: ${note.color}`, 
-//         value: note.color, 
-//         style: { color: note.color } 
-//       }];
-//     }
-//     return acc;
-//   }, [] as { label: string; value: string; style: { color: string } }[]);
-//   return uniqueColors;
-// }
-
 function GetFilterTags({ notes }: { notes: Note[] }) {
   const [tags, setTags] = useState<{key: number, value: string, label: string }[]>([]);
 
@@ -125,7 +110,7 @@ function GetFilterTags({ notes }: { notes: Note[] }) {
 
 function NoteItem({ note, setOpnNote }: { note: Note; setOpnNote: Dispatch<SetStateAction<Note | null>> }) {
   return (
-    <Pressable style={[noteStyle.note, { borderWidth: 2, borderColor: note.color }]} onPress={() => setOpnNote(note)}>
+    <Pressable style={[noteStyle.note, { borderWidth: 2, borderColor: note.color, width: '80%' }]} onPress={() => setOpnNote(note)}>
       <Text style={[noteStyle.noteH1, { textDecorationLine: 'underline', textDecorationColor: note.color }]}>{note.note_h1}</Text>
       <Text style={noteStyle.truncatedText} numberOfLines={3} ellipsizeMode="tail">
         {note.note}
@@ -165,6 +150,7 @@ function Notes() {
           <Text style={noteStyle.textStyle}>Write a new note</Text>
         </Pressable>
         <DropDownPicker
+        style={{ width: '70%', alignSelf: 'center', marginTop: 10, marginBottom: 10 }}
           open={open}
           value={value}
           // onChange={console.log("selected tag:", value)}
