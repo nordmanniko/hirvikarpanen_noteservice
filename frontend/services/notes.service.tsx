@@ -35,12 +35,13 @@ const addNote = async (title: string, note: string, color: string, userID: numbe
       return [];
     }
   }
-const editNote = async (id: number, title: string, note: string, userID: number) => {
+const editNote = async (id: number, title: string, note: string, userID: number, tag_id: number) => {
   try {
     const response = await api.patch(`/notes/${id}`, {
       "note_h1": title,
       "note": note,
       "date": new Date().toLocaleDateString('pt-PT'), 
+      ...(tag_id !== null && { "tag_id": tag_id })
     });
     return response;
   } catch (error) {

@@ -53,7 +53,8 @@ const sendDeleteNote = async (id: number, setNotes: Dispatch<SetStateAction<Note
           onRequestClose={() => setOpnNote(null)}
       >
           <View style={basic.overlay}>
-              <View style={noteStyle.inspection}>
+              <View style={[noteStyle.inspection]}>
+
                       {whichReturn === 'normal' ? (
                           <>
                             <Pressable
@@ -68,7 +69,7 @@ const sendDeleteNote = async (id: number, setNotes: Dispatch<SetStateAction<Note
                               </Pressable>
 
                               <Text style={noteStyle.noteH1}>{note?.note_h1}</Text>
-                              <Text style={noteStyle.noteText}>{note?.note}</Text>
+                              <Text style={[noteStyle.truncatedText, {textOverflow: 'wrap'}]}>{note?.note}</Text>
                               <Text style={basic.text}>{note?.date}</Text>
                               <View style={noteStyle.modalButtonContainer}>
                               <Pressable

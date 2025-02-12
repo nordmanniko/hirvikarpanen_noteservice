@@ -5,6 +5,9 @@ import HandleClose from '../writeanote';
 import {editNote} from '@/services/notes.service';
 import {LoadNotes} from '@/app/notes/notes';
 
+import DropDownPicker from 'react-native-dropdown-picker';
+import {GetTags} from '../tagFunctions';
+
 //styles
 import noteStyle from '@/components/styles/noteStyle';
 import {deleteNotes} from '@/services/notes.service';
@@ -22,6 +25,12 @@ interface Note {
 function EditNote({ note, setOpnNote, notes, setNotes, setWhichReturn}: { note: Note | null; setOpnNote: Dispatch<SetStateAction<Note | null>>; notes: Note[]; setNotes: Dispatch<SetStateAction<Note[]>>; whichReturn: string; setWhichReturn: Dispatch<SetStateAction<string>> }) {
     const [title, setTitle] = useState('');
     const [newNote, setNewNote] = useState('');
+
+    const [open, setOpen] = useState(false);
+    const [value, setValue] = useState('');
+    const [items, setItems] = useState<{ label: string; value: string }[]>([]);
+    const [slctdTag, setSlctdTag] = useState('');
+
     useEffect(() => {
         if (note) {
             setTitle(note.note_h1);
@@ -35,7 +44,10 @@ function EditNote({ note, setOpnNote, notes, setNotes, setWhichReturn}: { note: 
             return;
         }
         try{
-            const result = await editNote(note?.id ?? 0, title, newNote, 1);
+            if(slctdTag === '') {
+              setSlctdTag(null);
+            }
+            const result = await editNote(note?.id ?? 0, title, newNote, 1, slctdTag);
             console.log('Note changed:', result);
                 if (result) {
                   setNotes(notes => notes.filter(note => note.id !== (note?.id ?? 0)));
@@ -68,6 +80,16 @@ function EditNote({ note, setOpnNote, notes, setNotes, setWhichReturn}: { note: 
                       onChangeText={text => handleChange(setTitle, text)}
                       value={title}
                     />
+                    <DropDownPicker
+                        style={{ width: '70%', alignSelf: 'center', marginTop: 10, marginBottom: 10 }}
+                        open={open}
+                        value={value}
+                        onChange={value => {setSlctdTag(value)}}
+                        items={GetTags()}
+                        setOpen={setOpen}
+                        setValue={setValue}
+                        setItems={setItems}
+                      />
                     <Text style={basic.modalText}>Note</Text>
                     <TextInput
                       style={basic.textArea}

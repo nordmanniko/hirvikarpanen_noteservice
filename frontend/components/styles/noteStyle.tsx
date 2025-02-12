@@ -6,7 +6,7 @@ const noteStyle=StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     elevation: 5,
-
+    width: '60%',
   },
   note: {
     width: '90%',

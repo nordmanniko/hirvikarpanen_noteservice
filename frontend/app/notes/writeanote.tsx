@@ -17,18 +17,19 @@ interface Note {
   tag_id: number;
 }
 
-export function GetTags({ slctdTag, notes }: { slctdTag: number, notes: Note[] }) {
+function GetTags() {
   const [tags, setTags] = useState<{ key: number, value: string, label: string }[]>([]);
   useEffect(() => {
     const userID = 1; // Placeholder user ID, replace with actual authentication
     getTagsByUser(userID).then((res) => {
       if (res.length > 0) {
-        const newTags = res.map((tag: { key: number; tag: string }) => ({
+        const newTags = res.map((tag: { key: number; tag: string, value: string }) => ({
           key: tag.key,
           label: `${tag.tag}`,
           value: tag.tag
         }));
         setTags(newTags);
+        console.log("tags:", tags);
       } else {
         console.log("No tags found for user");
       }
@@ -36,11 +37,16 @@ export function GetTags({ slctdTag, notes }: { slctdTag: number, notes: Note[] }
       console.error("Error fetching tags:", error);
     });
   }, []);
-  return tags;
+  const tagOptions = [
+    {key: '', label: "None", value: '' },
+     ...tags
+  ];
+  console.log("tagOptions:", tagOptions);
+  return tagOptions;
 }
 
 
-export function NotepadPopup({ setOnClose, setNotes, notes, tags }: { setOnClose: Dispatch<SetStateAction<boolean>>; setNotes: Dispatch<SetStateAction<Note[]>>; notes: Note[]; tags: { key: number, value: string }[] }) {
+function NotepadPopup({ setOnClose, setNotes, notes, tags }: { setOnClose: Dispatch<SetStateAction<boolean>>; setNotes: Dispatch<SetStateAction<Note[]>>; notes: Note[]; tags: { label: string, value: string }[] }) {
   const [title, setTitle] = useState('');
   const [note, setNote] = useState('');
   const [color, setColor] = useState('#ff0000');
@@ -62,7 +68,7 @@ export function NotepadPopup({ setOnClose, setNotes, notes, tags }: { setOnClose
         return;
       }
       const userID = 1; /*pitää vaihtaa tokenilta saatavaksi tuo userid*/ 
-      // console.log("title:", title, "note:", note, "color:", color, "tag_id:", slctdTag);
+      console.log("send note:","title:", title, "note:", note, "color:", color, "tag_id:", slctdTag);
       const response = await addNote(title, note, color, userID, slctdTag);
       if (response.data) {
         const newNote = {
@@ -132,12 +138,10 @@ export function NotepadPopup({ setOnClose, setNotes, notes, tags }: { setOnClose
             open={open}
             value={value}
             onChange={value => {setSlctdTag(value)}}
-            items={items}
-            items={[
+            items={
               // tähän asia joka vaihtuu riippuen siitö onko painettu via ei
-              { label: "None", value: '' },
-              ...GetTags({slctdTag, notes})
-            ]}
+              GetTags()
+            }
             setOpen={setOpen}
             setValue={setValue}
             setItems={setItems}
