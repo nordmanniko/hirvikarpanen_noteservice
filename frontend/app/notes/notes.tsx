@@ -2,7 +2,7 @@ import { View, Text, Pressable, Modal, Alert } from 'react-native';
 import { Link, Stack } from 'expo-router';
 import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
 import React, { useState, useEffect, useLayoutEffect, Dispatch, SetStateAction } from 'react';
-import {getNotes, getTags} from '../../services/notes.service';
+import {getNotes, getTagsByUser, getTagsByTagID} from '../../services/notes.service';
 import NotepadPopup from '@/app/notes/writeanote';
 import DropDownPicker from 'react-native-dropdown-picker';
 //Styles
@@ -19,15 +19,27 @@ interface Note {
   img: string;
   color: string;
   date: string;
+  tag_id: number;
 }
 
-function LoadNotes({ notes, setNotes, value }: { notes: Note[]; setNotes: Dispatch<SetStateAction<Note[]>>; value: string }) {
+function LoadNotes({ notes, setNotes, value, tags, setTags }: { notes: Note[]; setNotes: Dispatch<SetStateAction<Note[]>>; value: string; tags: {key: number, value: string}[]; setTags: Dispatch<SetStateAction<{key: number, value: string}[]>> }) {
   setNotes([]);
   const userID = 1;
       getNotes(userID).then((res) => {
         if (res.length <= 0) {
-          console.log("notes null: ", notes, ", res:", res);
+          // console.log("notes null: ", notes, ", res:", res);
         } else {
+          getTagsByUser(userID).then((res) => {
+            const temp: {key: number, Tag: string}[] = [];
+            res.forEach((tag: { key: number; Tag: string }) => {
+              temp.push({
+                key: tag.id,
+                Tag: tag.tag
+              });
+            });
+            setTags(temp);
+            console.log("tags:", tags);
+          })
           const temp = [];
           res.forEach((res: Note) => {
           temp.push({
@@ -36,7 +48,8 @@ function LoadNotes({ notes, setNotes, value }: { notes: Note[]; setNotes: Dispat
             note: res.note,
             img: res.img,
             color: res.color,
-            date: res.date
+            date: res.date,
+            tag_id: res.tag_id
           });
           });
           temp.sort((a, b) => {
@@ -44,11 +57,24 @@ function LoadNotes({ notes, setNotes, value }: { notes: Note[]; setNotes: Dispat
             const dateB = new Date(b.date.split('/').reverse().join('-'));
             return dateB.getTime() - dateA.getTime();
         });
-        if(value == ''){
+        if(value == ''){ /*All notes*/
           setNotes(temp);
-          console.log("notes contains: ", notes, ", res:", res);
+          // console.log("notes contains: ", notes, ", res:", res);
         }
-//        else if...
+        else if (value !== '') { /*Specific tag*/
+          const selectedTag = tags.find(tag => tag.Tag === value);
+          // console.log("selectedTag:", selectedTag);
+          if (selectedTag!=null) {
+            const filteredNotes = temp.filter((note: Note) => {
+              console.log("Checking note:", note, "with tag_id:", note.tag_id);
+              return note.tag_id === selectedTag.key;
+          });
+            setNotes(filteredNotes);
+            console.log("Filtered notes based on selected tag:", filteredNotes);
+          } else {
+            console.log("Tag not found:", value);
+          }
+        }
       }    
   });
 }
@@ -68,30 +94,33 @@ function LoadNotes({ notes, setNotes, value }: { notes: Note[]; setNotes: Dispat
 // }
 
 function GetFilterTags({ notes }: { notes: Note[] }) {
-  const [tags, setTags] = useState<{value: string }[]>([]);
+  const [tags, setTags] = useState<{key: number, value: string, label: string }[]>([]);
 
   useEffect(() => {
-    // Assuming you'll implement user authentication later
     const userID = 1; // Placeholder user ID, replace with actual authentication
-    
-    getTags(userID).then((res) => {
+    getTagsByUser(userID).then((res) => {
       if (res.length > 0) {
-        const tagOptions = res.map(tag => ({
-          value: tag.name
+        console.log("res:", res);
+        const newTags = res.map((tag: { key: number; tag: string }) => ({
+          key: tag.key,
+          label: `Filter by tag: ${tag.tag}`,
+          value: tag.tag
         }));
-        setTags(tagOptions);
+        setTags(newTags);
+        // console.log("tags:", tags);
       } else {
         console.log("No tags found for user");
       }
     }).catch(error => {
       console.error("Error fetching tags:", error);
     });
-  }, [notes]);
-  const tagOptions = tags.map(tag => ({
-    label: `Filter by tag: ${tag.value}`, 
-    value: tag.value
-  }));
-  console.log("tagoptions:", tagOptions);
+  }, []);
+  // tags.map((tag) => ({
+  //   label: `Filter by tag: ${tag.value}`, 
+  //   value: tag.value
+  // }));
+  // console.log("tagoptions:", tagOptions);
+  return tags;
 }
 
 function NoteItem({ note, setOpnNote }: { note: Note; setOpnNote: Dispatch<SetStateAction<Note | null>> }) {
@@ -111,12 +140,13 @@ function Notes() {
   const [opnNote, setOpnNote] = useState<Note | null>(null);
   const [onClose, setOnClose] = useState(false);
   const [items, setItems] = useState([]);
+  const [tags, setTags] = useState<{key: number, Tag: string}[]>([]);
 
   const [open, setOpen] = useState(false);
   const [value, setValue] = useState('');
   useEffect(() => {
-      LoadNotes({ notes, setNotes, value});
-  }, [/*notes*/]);
+      LoadNotes({ notes, setNotes, value, tags, setTags});
+  }, [value]);
 
   const filterTags = GetFilterTags({ notes });
 
@@ -127,6 +157,7 @@ function Notes() {
             <NotepadPopup
               setOnClose={setOnClose}
               setNotes={setNotes}
+              notes={notes}
             />}
         <Pressable
           style={[noteStyle.backButton, noteStyle.buttonOpen]}
@@ -136,10 +167,10 @@ function Notes() {
         <DropDownPicker
           open={open}
           value={value}
+          // onChange={console.log("selected tag:", value)}
           items={[
-            { label: 'Filter by...', value: '' },
-            ...GetFilterTags,
-            { label: 'Filter by ', value: 'shared' },
+            {label:"Select tag", value: ''},// tähän asia joka vaihtuu riippuen siitö onko painettu via ei
+            ...GetFilterTags({ notes })
           ]}
           setOpen={setOpen}
           setValue={setValue}

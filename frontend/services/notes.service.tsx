@@ -47,13 +47,22 @@ const editNote = async (id: number, title: string, note: string, userID: number)
     return [];
   }
 }
-const getTags = async (userID: number) => {
+const getTagsByUser = async (userID: number) => {
   try {
       const response = await api.get(`/tags/user/${userID}`);
-      return response;
+      return response.data;
     } catch (error) {
-      console.error('Error getting note:', error);
+      console.error('Error getting tags:', error);
       return [];
     }
 }
-export {getNotes, deleteNotes, addNote, editNote, getTags};
+const getTagsByTagID = async (tagID: number) => {
+  try {
+      const response = await api.get(`/tags/${tagID}`);
+      return response.data;
+    } catch (error) {
+      console.error('Error getting tags:', error);
+      return [];
+    }
+}
+export {getNotes, deleteNotes, addNote, editNote, getTagsByUser, getTagsByTagID};

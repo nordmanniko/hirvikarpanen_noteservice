@@ -14,6 +14,7 @@ interface Note {
   img: string;
   color: string;
   date: string;
+  tag_id: number;
 }
 function BigModal({ note, setOpnNote, notes, setNotes}: { note: Note | null; setOpnNote: Dispatch<SetStateAction<Note | null>>; notes: Note[]; setNotes: Dispatch<SetStateAction<Note[]>> }) {
 
@@ -42,7 +43,7 @@ const sendDeleteNote = async (id: number, setNotes: Dispatch<SetStateAction<Note
     const [isPressed, setIsPressed] = useState(false);
     const [whichReturn, setWhichReturn] = useState('normal');
     useEffect(() => {
-      console.log('whichReturn updated to:', whichReturn);
+    //   console.log('whichReturn updated to:', whichReturn);
   }, [whichReturn]);
     return (
       <Modal
@@ -84,7 +85,7 @@ const sendDeleteNote = async (id: number, setNotes: Dispatch<SetStateAction<Note
                                   style={[noteStyle.modalButton, basic.buttonOpen]}
                                   onPress={() => {
                                       setWhichReturn('edit');
-                                      console.log(whichReturn,'EDIT pressed');
+                                    //   console.log(whichReturn,'EDIT pressed');
                                   }}
                                   onPressIn={() => setIsPressed(true)}
                                   onPressOut={() => setIsPressed(false)}

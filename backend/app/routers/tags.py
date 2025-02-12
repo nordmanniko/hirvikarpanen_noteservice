@@ -3,6 +3,8 @@ from typing import Annotated
 from fastapi import Depends, HTTPException, Query, APIRouter
 from sqlmodel import Field, Session, SQLModel, select, Relationship
 from typing import Optional
+import logging
+import time
 
 from ..dependencies import get_session
 
@@ -69,11 +71,11 @@ def read_tag(tagID: int, session: SessionDep):
 
 # GET tags by user_id
 @router.get("/user/{user_id}", response_model=list[TagPublic])
-def read_tag(session: SessionDep, tagID: int = 1, offset: int = 0, limit: Annotated[int, Query(le=100)] = 100):
-    logging.info(f"Fetching tags for tagID: {tagID}, offset: {offset}, limit: {limit}")
+def read_tag(session: SessionDep, user_id: int = 1, offset: int = 0, limit: Annotated[int, Query(le=100)] = 100):
+    logging.info(f"Fetching tags for user_id: {user_id}, offset: {offset}, limit: {limit}")
     start_time = time.time()
     try:
-        tag = session.exec(select(Tag).where(Tag.id == tagID).offset(offset).limit(limit)).all()
+        tag = session.exec(select(Tag).where(Tag.user_id == user_id).offset(offset).limit(limit)).all()
         logging.info(f"Query executed in {time.time() - start_time} seconds")
         if not tag:
             raise HTTPException(status_code=404, detail="Tag not found")

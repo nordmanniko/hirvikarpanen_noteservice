@@ -16,6 +16,7 @@ interface Note {
   img: string;
   color: string;
   date: string;
+  tag_id: number;
 }
   
 function EditNote({ note, setOpnNote, notes, setNotes, setWhichReturn}: { note: Note | null; setOpnNote: Dispatch<SetStateAction<Note | null>>; notes: Note[]; setNotes: Dispatch<SetStateAction<Note[]>>; whichReturn: string; setWhichReturn: Dispatch<SetStateAction<string>> }) {
