@@ -17,16 +17,17 @@ interface Note {
   tag_id: number;
 }
 
-function GetTags() {
+export function GetTags() {
   const [tags, setTags] = useState<{ key: number, value: string, label: string }[]>([]);
   useEffect(() => {
     const userID = 1; // Placeholder user ID, replace with actual authentication
     getTagsByUser(userID).then((res) => {
       if (res.length > 0) {
+        console.log(res)
         const newTags = res.map((tag: { key: number; tag: string, value: string }) => ({
-          key: tag.key,
+          key: tag.id,
           label: `${tag.tag}`,
-          value: tag.tag
+          value: tag.id
         }));
         setTags(newTags);
         console.log("tags:", tags);
@@ -51,10 +52,11 @@ function NotepadPopup({ setOnClose, setNotes, notes, tags }: { setOnClose: Dispa
   const [note, setNote] = useState('');
   const [color, setColor] = useState('#ff0000');
   const [showColorModal, setShowColorModal] = useState(false);
+
   const [slctdTag, setSlctdTag] = useState(null);
 
   const [open, setOpen] = useState(false);
-  const [value, setValue] = useState('');
+  const [value, setValue] = useState(null);
   const [items, setItems] = useState([]);
 
   const HandleClose = () => {
@@ -104,7 +106,7 @@ function NotepadPopup({ setOnClose, setNotes, notes, tags }: { setOnClose: Dispa
     HandleClose();
   };
 
-  const handleChange = (setter: Dispatch<SetStateAction<any>>, value: string) => {
+  const handleChange = (setter: Dispatch<SetStateAction<any>>, value: number) => {
     setter(value);
   };
 
@@ -137,7 +139,11 @@ function NotepadPopup({ setOnClose, setNotes, notes, tags }: { setOnClose: Dispa
             style={{ width: '70%', alignSelf: 'center', marginTop: 10, marginBottom: 10 }}
             open={open}
             value={value}
-            onChange={value => {setSlctdTag(value)}}
+            onChangeValue={value => {
+              setSlctdTag(value) 
+              // const selectedItem = items.find(item => item.value === event.target.value);
+              // handleChange(setSlctdTag, selectedItem.key ? selectedItem.key : null);
+            }}
             items={
               // tähän asia joka vaihtuu riippuen siitö onko painettu via ei
               GetTags()
@@ -166,4 +172,4 @@ function NotepadPopup({ setOnClose, setNotes, notes, tags }: { setOnClose: Dispa
   );
 };
 
-export{NotepadPopup, GetTags};
+export{NotepadPopup};

@@ -2,15 +2,15 @@ import { View, Modal, Pressable, Text, Alert, TextInput, Image } from 'react-nat
 import React, { useState, Dispatch, SetStateAction, useEffect } from 'react';
 import basic from '@/components/styles/basics'; 
 import HandleClose from '../writeanote';
-import {editNote} from '@/services/notes.service';
+import {editNote, getTagsByUser} from '@/services/notes.service';
 import {LoadNotes} from '@/app/notes/notes';
 
 import DropDownPicker from 'react-native-dropdown-picker';
-import {GetTags} from '../tagFunctions';
 
 //styles
 import noteStyle from '@/components/styles/noteStyle';
 import {deleteNotes} from '@/services/notes.service';
+
 
 interface Note {
   id: number;
@@ -21,7 +21,32 @@ interface Note {
   date: string;
   tag_id: number;
 }
-  
+
+export function GetTags() {
+  const [tags, setTags] = useState<{ key: number, value: string, label: string }[]>([]);
+  useEffect(() => {
+    const userID = 1; // Placeholder user ID, replace with actual authentication
+    getTagsByUser(userID).then((res) => {
+      if (res.length > 0) {
+        console.log(res)
+        const newTags = res.map((tag: { key: number; tag: string, value: string }) => ({
+          key: tag.id,
+          label: `${tag.tag}`,
+          value: tag.id
+        }));
+        setTags(newTags);
+      } else {
+      }
+    }).catch(error => {
+    });
+  }, []);
+  const tagOptions = [
+    {key: '', label: "None", value: '' },
+     ...tags
+  ];
+  return tagOptions;
+}
+ 
 function EditNote({ note, setOpnNote, notes, setNotes, setWhichReturn}: { note: Note | null; setOpnNote: Dispatch<SetStateAction<Note | null>>; notes: Note[]; setNotes: Dispatch<SetStateAction<Note[]>>; whichReturn: string; setWhichReturn: Dispatch<SetStateAction<string>> }) {
     const [title, setTitle] = useState('');
     const [newNote, setNewNote] = useState('');
@@ -35,18 +60,16 @@ function EditNote({ note, setOpnNote, notes, setNotes, setWhichReturn}: { note: 
         if (note) {
             setTitle(note.note_h1);
             setNewNote(note.note);
+            setValue(note.tag_id);
         }
     }, [note]);
 
     const handleSave = async () => {
-        if (title === note?.note_h1 && newNote === note?.note) {
+        if (title === note?.note_h1 && newNote === note?.note && slctdTag === note?.tag_id) {
             alert('You can’t save the same note. Please change the fields.');
             return;
         }
         try{
-            if(slctdTag === '') {
-              setSlctdTag(null);
-            }
             const result = await editNote(note?.id ?? 0, title, newNote, 1, slctdTag);
             console.log('Note changed:', result);
                 if (result) {
@@ -81,15 +104,22 @@ function EditNote({ note, setOpnNote, notes, setNotes, setWhichReturn}: { note: 
                       value={title}
                     />
                     <DropDownPicker
-                        style={{ width: '70%', alignSelf: 'center', marginTop: 10, marginBottom: 10 }}
-                        open={open}
-                        value={value}
-                        onChange={value => {setSlctdTag(value)}}
-                        items={GetTags()}
-                        setOpen={setOpen}
-                        setValue={setValue}
-                        setItems={setItems}
-                      />
+                      style={{ width: '10%', alignSelf: 'center', marginTop: 10, marginBottom: 10 }}
+                      open={open}
+                      value={value}
+                      onChangeValue={value => {
+                        setSlctdTag(value) 
+                        // const selectedItem = items.find(item => item.value === event.target.value);
+                        // handleChange(setSlctdTag, selectedItem.key ? selectedItem.key : null);
+                      }}
+                      items={
+                        // tähän asia joka vaihtuu riippuen siitö onko painettu via ei
+                        GetTags()
+                      }
+                      setOpen={setOpen}
+                      setValue={setValue}
+                      setItems={setItems}
+                    />
                     <Text style={basic.modalText}>Note</Text>
                     <TextInput
                       style={basic.textArea}
