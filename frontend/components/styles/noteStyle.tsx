@@ -1,6 +1,9 @@
 import {StyleSheet} from 'react-native';
 const noteStyle=StyleSheet.create({
-    
+  containerForNotes: {
+    flex: 1,
+    padding: 16,
+  },  
   inspectionModal: {
     flex: 1,
     justifyContent: 'center',
@@ -70,6 +73,11 @@ const noteStyle=StyleSheet.create({
   deleteButtonPressed: {
     backgroundColor: '#3a3d4a', // Darker shade when pressed
   },
+
+  buttons: {
+    flexDirection: 'row',
+  },
+
   backButton: {
     fontSize: 20,
     color: '#fff',
@@ -78,6 +86,17 @@ const noteStyle=StyleSheet.create({
     elevation: 2,
     alignSelf: 'flex-end',
     marginBottom: 10,
+    paddingLeft: 10,
+  },
+  newtagButton: {
+    fontSize: 20,
+    color: '#fff',
+    borderRadius: 20,
+    padding: 10,
+    elevation: 2,
+    alignSelf: 'flex-start',
+    marginBottom: 10,
+    paddingRight: 10,
   },
   buttonOpen: {
     backgroundColor: '#F194FF',

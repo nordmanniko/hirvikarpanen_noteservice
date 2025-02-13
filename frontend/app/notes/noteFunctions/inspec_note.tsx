@@ -19,7 +19,7 @@ interface Note {
 function BigModal({ note, setOpnNote, notes, setNotes}: { note: Note | null; setOpnNote: Dispatch<SetStateAction<Note | null>>; notes: Note[]; setNotes: Dispatch<SetStateAction<Note[]>> }) {
 
 const sendDeleteNote = async (id: number, setNotes: Dispatch<SetStateAction<Note[]>>) => {
-    console.log('sendDeleteNote called with id:', id);
+    // console.log('sendDeleteNote called with id:', id);
     try {
         const result = confirm('Are you sure you want to delete this note? This action cannot be undone.');
         if (result == true) {

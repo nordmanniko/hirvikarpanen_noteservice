@@ -28,7 +28,7 @@ export function GetTags() {
     const userID = 1; // Placeholder user ID, replace with actual authentication
     getTagsByUser(userID).then((res) => {
       if (res.length > 0) {
-        console.log(res)
+        // console.log(res)
         const newTags = res.map((tag: { key: number; tag: string, value: string }) => ({
           key: tag.id,
           label: `${tag.tag}`,
@@ -71,12 +71,12 @@ function EditNote({ note, setOpnNote, notes, setNotes, setWhichReturn}: { note: 
         }
         try{
             const result = await editNote(note?.id ?? 0, title, newNote, 1, slctdTag);
-            console.log('Note changed:', result);
+            // console.log('Note changed:', result);
                 if (result) {
                   setNotes(notes => notes.filter(note => note.id !== (note?.id ?? 0)));
-                  console.log(notes,'Note changed successfully!');
+                  // console.log(notes,'Note changed successfully!');
                 } else if (result == null) {
-                  console.log('Failed to change note.');
+                  // console.log('Failed to change note.');
                   return;
                 }
               } catch (error) {

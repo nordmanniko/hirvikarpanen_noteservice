@@ -8,7 +8,15 @@ const basic=StyleSheet.create({
           paddingHorizontal: 10,
           paddingTop: 20,
           overflow: 'scroll',
-          maxHeight: '100%',
+          maxHeight: '95%',
+        },
+        containerSecondary: {
+          backgroundColor: '#25292e',
+          borderRadius: 10,
+          padding: 10,
+          maxHeight: '22%',
+          overflow: 'scroll',
+          marginBottom: 10,
         },
         overlay: {
           elevation: 5,
@@ -44,6 +52,8 @@ const basic=StyleSheet.create({
             borderRadius: 20,
             padding: 10,
             elevation: 2,
+            border: '2px solid #fff',
+            marginBottom: 10,
           },
           backButton: {
             fontSize: 20,
@@ -92,7 +102,6 @@ const basic=StyleSheet.create({
             textAlign: 'center',
           },
           popupContainer: {
-            width: '90%',
             padding: 20,
             backgroundColor: 'white',
             borderRadius: 10,

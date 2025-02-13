@@ -1,4 +1,4 @@
-import {RefreshControl, View, Text, Pressable, Modal, Alert } from 'react-native';
+import {RefreshControl, View, Text, Pressable, Modal, Alert, ScrollView } from 'react-native';
 import { Link, Stack } from 'expo-router';
 import { SafeAreaView, SafeAreaProvider } from 'react-native-safe-area-context';
 import React, { useState, useEffect, useLayoutEffect, Dispatch, SetStateAction } from 'react';
@@ -41,7 +41,7 @@ function LoadNotes({ notes, setNotes, value, tags, setTags }: { notes: Note[]; s
               });
             });
             setTags(temp);
-            console.log("tags:", tags);
+            // console.log("tags:", tags);
           })
           const temp = [];
           res.forEach((res: Note) => {
@@ -75,7 +75,7 @@ function LoadNotes({ notes, setNotes, value, tags, setTags }: { notes: Note[]; s
             setNotes(filteredNotes);
             // console.log("Filtered notes based on selected tag:", filteredNotes);
           } else {
-            console.log("Tag not found:", value);
+            // console.log("Tag not found:", value);
           }
         }
       }    
@@ -97,10 +97,10 @@ function GetFilterTags({value, setValue}: {value: string; setValue: Dispatch<Set
         setTags(newTags);
         // console.log("tags:", tags);
       } else {
-        console.log("No tags found for user");
+        // console.log("No tags found for user");
       }
     }).catch(error => {
-      console.error("Error fetching tags:", error);
+      // console.error("Error fetching tags:", error);
     });
   }, []);
   // tags.map((tag) => ({
@@ -139,7 +139,7 @@ function Notes() {
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
-    console.log("REFRESHED")
+    // console.log("REFRESHED")
     setTimeout(() => {
       setRefreshing(false);
     }, 2000);
@@ -160,7 +160,20 @@ function Notes() {
   return (
     <>
       <SafeAreaView style={basic.centeredView}>
-      {onClose && 
+        <View style={noteStyle.buttons}>
+      
+        {opnNewTag && 
+            <InputNewTag
+              setOpnNewTag={setOpnNewTag}
+              setTags={setTags}
+              setValue={setValue}
+            />}
+        <Pressable
+          style={[noteStyle.newtagButton, noteStyle.buttonOpen]}
+          onPress={() => setOpnNewTag(true)}>
+          <Text style={noteStyle.textStyle}>Edit tags</Text>
+        </Pressable>
+        {onClose && 
             <NotepadPopup
               setOnClose={setOnClose}
               setNotes={setNotes}
@@ -169,19 +182,9 @@ function Notes() {
         <Pressable
           style={[noteStyle.backButton, noteStyle.buttonOpen]}
           onPress={() => setOnClose(true)}>
-          <Text style={noteStyle.textStyle}>Write a new note</Text>
+          <Text style={noteStyle.textStyle}>Write a new Note</Text>
         </Pressable>
-        {opnNewTag && 
-            <InputNewTag
-              setOpnNewTag={setOpnNewTag}
-              setTags={setTags}
-              setValue={setValue}
-            />}
-        <Pressable
-          style={[noteStyle.backButton, noteStyle.buttonOpen]}
-          onPress={() => setOpnNewTag(true)}>
-          <Text style={noteStyle.textStyle}>Write a new Tag</Text>
-        </Pressable>
+        </View>
 
         <DropDownPicker
         style={{ width: '70%', alignSelf: 'center', marginTop: 10, marginBottom: 10 }}
@@ -197,13 +200,14 @@ function Notes() {
           setItems={setItems}
         />
       <Stack.Screen options={{ title: 'Notes' }} />
-      {opnNote && <BigModal note={opnNote} setOpnNote={setOpnNote} notes={notes} setNotes={setNotes}/>}
-      <View style={basic.container}>
-        {notes.map((note) => (
-          <NoteItem key={note.note_h1} note={note} setOpnNote={setOpnNote} />
-        ))}
-      </View>
-        </SafeAreaView>
+        {opnNote && <BigModal note={opnNote} setOpnNote={setOpnNote} notes={notes} setNotes={setNotes} />}
+        
+        <ScrollView style={noteStyle.containerForNotes} contentContainerStyle={{ alignItems: 'center' }}>
+            {notes.map((note) => (
+              <NoteItem key={note.note_h1} note={note} setOpnNote={setOpnNote} />
+            ))}
+        </ScrollView>
+      </SafeAreaView>
     </>
   );
 }

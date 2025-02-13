@@ -23,16 +23,16 @@ export function GetTags() {
     const userID = 1; // Placeholder user ID, replace with actual authentication
     getTagsByUser(userID).then((res) => {
       if (res.length > 0) {
-        console.log(res)
+        // console.log(res)
         const newTags = res.map((tag: { key: number; tag: string, value: string }) => ({
           key: tag.id,
           label: `${tag.tag}`,
           value: tag.id
         }));
         setTags(newTags);
-        console.log("tags:", tags);
+        // console.log("tags:", tags);
       } else {
-        console.log("No tags found for user");
+        // console.log("No tags found for user");
       }
     }).catch(error => {
       console.error("Error fetching tags:", error);
@@ -42,7 +42,7 @@ export function GetTags() {
     {key: '', label: "None", value: '' },
      ...tags
   ];
-  console.log("tagOptions:", tagOptions);
+  // console.log("tagOptions:", tagOptions);
   return tagOptions;
 }
 
@@ -70,7 +70,7 @@ function NotepadPopup({ setOnClose, setNotes, notes, tags }: { setOnClose: Dispa
         return;
       }
       const userID = 1; /*pitää vaihtaa tokenilta saatavaksi tuo userid*/ 
-      console.log("send note:","title:", title, "note:", note, "color:", color, "tag_id:", slctdTag);
+      // console.log("send note:","title:", title, "note:", note, "color:", color, "tag_id:", slctdTag);
       const response = await addNote(title, note, color, userID, slctdTag);
       if (response.data) {
         const newNote = {

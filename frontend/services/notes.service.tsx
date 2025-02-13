@@ -79,4 +79,13 @@ const addTag = async (tag: string, userID: number) => {
       return [];
     }
 }
-export {getNotes, deleteNotes, addNote, editNote, getTagsByUser, getTagsByTagID, addTag};
+const deleteTag = async (tagID: number) => {
+  try {
+      const response = await api.delete(`/tags/${tagID}`);
+      return response.data;
+    } catch (error) {
+      console.error('Error deleting tag:', error);
+      return [];
+    }
+}
+export {getNotes, deleteNotes, addNote, editNote, getTagsByUser, getTagsByTagID, addTag, deleteTag};
