@@ -47,7 +47,7 @@ export function GetTags() {
   return tagOptions;
 }
  
-function EditNote({ note, setOpnNote, notes, setNotes, setWhichReturn}: { note: Note | null; setOpnNote: Dispatch<SetStateAction<Note | null>>; notes: Note[]; setNotes: Dispatch<SetStateAction<Note[]>>; whichReturn: string; setWhichReturn: Dispatch<SetStateAction<string>> }) {
+function EditNote({ note, setOpnNote, notes, setNotes, setWhichReturn, tags, setTags}: { note: Note | null; setOpnNote: Dispatch<SetStateAction<Note | null>>; notes: Note[]; setNotes: Dispatch<SetStateAction<Note[]>>; whichReturn: string; setWhichReturn: Dispatch<SetStateAction<string>>;tags: {key: number, value: string}[]; setTags: Dispatch<SetStateAction<{key: number, value: string}[]>> }) {
     const [title, setTitle] = useState('');
     const [newNote, setNewNote] = useState('');
 
@@ -87,7 +87,7 @@ function EditNote({ note, setOpnNote, notes, setNotes, setWhichReturn}: { note: 
         setNewNote('');
         setOpnNote(null); // Close the modal after saving
         setWhichReturn('normal');
-        LoadNotes({ notes, setNotes });
+        LoadNotes({ notes, setNotes, value: 'none', tags, setTags });
     };
 
     const handleChange = (setter: Dispatch<SetStateAction<any>>, value: string) => {

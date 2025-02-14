@@ -16,7 +16,7 @@ interface Note {
   date: string;
   tag_id: number;
 }
-function BigModal({ note, setOpnNote, notes, setNotes}: { note: Note | null; setOpnNote: Dispatch<SetStateAction<Note | null>>; notes: Note[]; setNotes: Dispatch<SetStateAction<Note[]>> }) {
+function BigModal({ note, setOpnNote, notes, setNotes, tags, setTags}: { note: Note | null; setOpnNote: Dispatch<SetStateAction<Note | null>>; notes: Note[]; setNotes: Dispatch<SetStateAction<Note[]>>;tags: {key: number, value: string}[]; setTags: Dispatch<SetStateAction<{key: number, value: string}[]>> }) {
 
 const sendDeleteNote = async (id: number, setNotes: Dispatch<SetStateAction<Note[]>>) => {
     // console.log('sendDeleteNote called with id:', id);
@@ -96,7 +96,7 @@ const sendDeleteNote = async (id: number, setNotes: Dispatch<SetStateAction<Note
                               </View>
                           </>
                       ) : whichReturn === 'edit' ? (
-                          <EditNote note={note} setOpnNote={setOpnNote} notes={notes} setNotes={setNotes}  setWhichReturn={setWhichReturn}/>
+                          <EditNote note={note} setOpnNote={setOpnNote} notes={notes} setNotes={setNotes}  setWhichReturn={setWhichReturn} tags={tags}setTags={setTags}/>
                       ) : null}
               </View>
           </View>

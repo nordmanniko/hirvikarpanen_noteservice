@@ -200,7 +200,7 @@ function Notes() {
           setItems={setItems}
         />
       <Stack.Screen options={{ title: 'Notes' }} />
-        {opnNote && <BigModal note={opnNote} setOpnNote={setOpnNote} notes={notes} setNotes={setNotes} />}
+        {opnNote && <BigModal note={opnNote} setOpnNote={setOpnNote} notes={notes} setNotes={setNotes} tags={tags} setTags={setTags}/>}
         
         <ScrollView style={noteStyle.containerForNotes} contentContainerStyle={{ alignItems: 'center' }}>
             {notes.map((note) => (
